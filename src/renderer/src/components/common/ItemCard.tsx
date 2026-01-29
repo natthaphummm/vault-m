@@ -42,10 +42,10 @@ export default function ItemCard({
 
       {/* Top Right Badges */}
       <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5 z-10 pointer-events-none">
-        {showAmount && <Badge variant="outline">x{item.amount.toLocaleString()}</Badge>}
+        {showAmount && <Badge variant="outline">x{item.amount?.toLocaleString()}</Badge>}
         {showPrice && <Badge variant="outline">${item.price.toLocaleString()}</Badge>}
         {showTotalValue && (
-          <Badge variant="outline">Σ ${(item.price * item.amount).toLocaleString()}</Badge>
+          <Badge variant="outline">Σ ${(item.price * (item.amount ?? 0)).toLocaleString()}</Badge>
         )}
       </div>
 
@@ -62,11 +62,11 @@ export default function ItemCard({
       {/* Hover Overlay */}
       <div className="absolute inset-0 bg-white/90 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 flex flex-col items-center justify-center gap-3">
         <div className="flex items-center bg-white rounded-lg p-1 border border-gray-200 shadow-md">
-          <Button variant="outline" onClick={() => onUpdateAmount(item.id, item.amount - 1)}>
+          <Button variant="outline" onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) - 1)}>
             -
           </Button>
           <span className="w-10 text-center text-sm font-bold text-gray-800">{item.amount}</span>
-          <Button variant="outline" onClick={() => onUpdateAmount(item.id, item.amount + 1)}>
+          <Button variant="outline" onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) + 1)}>
             +
           </Button>
         </div>

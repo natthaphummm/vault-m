@@ -1,7 +1,4 @@
 import { useMemo } from 'react'
-import { Trash2, HelpCircle, Edit } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 
 import ItemCard from './ItemCard'
 

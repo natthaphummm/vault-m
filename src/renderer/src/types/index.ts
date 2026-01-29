@@ -4,6 +4,7 @@ export interface Item {
     price: number;
     category: string;
     image?: string;
+    amount?: number;
 }
 
 export interface InventoryItem {
