@@ -3,6 +3,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@renderer/components/ui/tabs'
 
 import InventoryGrid from '@renderer/components/common/InventoryGrid'
+import { ModeToggle } from '@/components/mode-toggle'
+
 import { useState } from 'react'
 import type { Item, InventoryItem } from '@renderer/types'
 import { INITIAL_ITEMS, INITIAL_INVENTORY } from '@renderer/data'
@@ -47,6 +49,7 @@ function App(): React.JSX.Element {
         <TabsList>
           <TabsTrigger value="inventory">Inventory</TabsTrigger>
           <TabsTrigger value="crafting">Crafting</TabsTrigger>
+          <TabsTrigger value="setting">Setting</TabsTrigger>
         </TabsList>
         <TabsContent value="inventory">
           <InventoryGrid
@@ -66,8 +69,9 @@ function App(): React.JSX.Element {
             onDelete={handleDeleteItem}
           />
         </TabsContent>
-        <TabsContent value="crafting" className="bg-amber-600">
-          Crafting
+        <TabsContent value="crafting">Crafting</TabsContent>
+        <TabsContent value="setting">
+          <ModeToggle />
         </TabsContent>
       </Tabs>
     </main>
