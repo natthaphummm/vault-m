@@ -42,13 +42,13 @@ function App(): React.JSX.Element {
   }
 
   return (
-    <main className="min-h-screen font-sans mx-auto p-2 bg-amber-200">
+    <main className="min-h-screen font-sans mx-auto p-2">
       <Tabs defaultValue="inventory" className="w-full">
         <TabsList>
           <TabsTrigger value="inventory">Inventory</TabsTrigger>
           <TabsTrigger value="crafting">Crafting</TabsTrigger>
         </TabsList>
-        <TabsContent value="inventory" className="bg-amber-600">
+        <TabsContent value="inventory">
           <InventoryGrid
             items={items}
             inventory={inventory}
