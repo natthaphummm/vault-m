@@ -33,7 +33,7 @@ export default function ItemCard({
           <img
             src={item.image}
             alt={item.name}
-            className="w-full h-full object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-110"
+            className="size-24 object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-110"
           />
         ) : (
           <HelpCircle size={48} className="text-gray-300" />
@@ -42,16 +42,14 @@ export default function ItemCard({
 
       {/* Top Right Badges */}
       <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5 z-10 pointer-events-none">
-        {showAmount && <Badge variant="outline">x{item.amount?.toLocaleString()}</Badge>}
-        {showPrice && <Badge variant="outline">${item.price.toLocaleString()}</Badge>}
-        {showTotalValue && (
-          <Badge variant="outline">Σ ${(item.price * (item.amount ?? 0)).toLocaleString()}</Badge>
-        )}
+        {showAmount && <Badge>x{item.amount?.toLocaleString()}</Badge>}
+        {showPrice && <Badge>${item.price.toLocaleString()}</Badge>}
+        {showTotalValue && <Badge>Σ ${(item.price * (item.amount ?? 0)).toLocaleString()}</Badge>}
       </div>
 
       {/* Category Badge */}
       <div className="absolute top-3 left-3 z-10 pointer-events-none">
-        <Badge variant="outline">{item.category.substring(0, 8)}</Badge>
+        <Badge>{item.category.substring(0, 8)}</Badge>
       </div>
 
       {/* Bottom Info */}
@@ -62,13 +60,9 @@ export default function ItemCard({
       {/* Hover Overlay */}
       <div className="absolute inset-0 bg-white/90 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 flex flex-col items-center justify-center gap-3">
         <div className="flex items-center bg-white rounded-lg p-1 border border-gray-200 shadow-md">
-          <Button variant="outline" onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) - 1)}>
-            -
-          </Button>
-          <span className="w-10 text-center text-sm font-bold text-gray-800">{item.amount}</span>
-          <Button variant="outline" onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) + 1)}>
-            +
-          </Button>
+          <Button onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) - 1)}>-</Button>
+          <span className="w-24 text-center text-sm font-bold text-gray-800">{item.amount}</span>
+          <Button onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) + 1)}>+</Button>
         </div>
         {showAmount || showPrice || showTotalValue ? null : (
           <div className="text-[10px] text-gray-500 font-mono flex flex-col items-center">
@@ -77,10 +71,10 @@ export default function ItemCard({
           </div>
         )}
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => onEdit(item)}>
+          <Button onClick={() => onEdit(item)}>
             <Edit size={16} />
           </Button>
-          <Button variant="outline" onClick={() => onDelete(item.id)}>
+          <Button variant="destructive" onClick={() => onDelete(item.id)}>
             <Trash2 size={16} />
           </Button>
         </div>
