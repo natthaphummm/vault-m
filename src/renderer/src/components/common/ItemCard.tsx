@@ -24,7 +24,7 @@ export default function ItemCard({
   return (
     <div
       key={item.id}
-      className={`group relative aspect-square bg-white border border-gray-200 rounded shadow hover:shadow-lg transition-all overflow-hidden flex flex-col
+      className={`group relative aspect-square border-border border rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col bg-card text-card-foreground
                 ${item.amount === 0 ? 'opacity-60 grayscale' : ''}`}
     >
       {/* Image Area */}
@@ -36,45 +36,67 @@ export default function ItemCard({
             className="size-24 object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-110"
           />
         ) : (
-          <HelpCircle size={48} className="text-gray-300" />
+          <HelpCircle size={48} className="text-muted-foreground/20" />
         )}
       </div>
 
       {/* Top Right Badges */}
       <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5 z-10 pointer-events-none">
-        {showAmount && <Badge>x{item.amount?.toLocaleString()}</Badge>}
-        {showPrice && <Badge>${item.price.toLocaleString()}</Badge>}
-        {showTotalValue && <Badge>Σ ${(item.price * (item.amount ?? 0)).toLocaleString()}</Badge>}
+        {showAmount && <Badge variant="secondary">x{item.amount?.toLocaleString()}</Badge>}
+        {showPrice && <Badge variant="outline">${item.price.toLocaleString()}</Badge>}
+        {showTotalValue && (
+          <Badge className="bg-primary text-primary-foreground">
+            Σ ${(item.price * (item.amount ?? 0)).toLocaleString()}
+          </Badge>
+        )}
       </div>
 
       {/* Category Badge */}
       <div className="absolute top-3 left-3 z-10 pointer-events-none">
-        <Badge>{item.category.substring(0, 8)}</Badge>
+        <Badge variant="outline" className="bg-background/50 backdrop-blur-sm">
+          {item.category.substring(0, 8)}
+        </Badge>
       </div>
 
       {/* Bottom Info */}
-      <div className="absolute inset-x-0 bottom-0 p-3 z-10 bg-white border-t border-gray-100">
-        <div className="font-bold text-gray-800 text-sm truncate text-center">{item.name}</div>
+      <div className="absolute inset-x-0 bottom-0 p-3 z-10 bg-card/95 backdrop-blur-sm border-t border-border">
+        <div className="font-bold text-sm truncate text-center">{item.name}</div>
       </div>
 
       {/* Hover Overlay */}
-      <div className="absolute inset-0 bg-white/90 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 flex flex-col items-center justify-center gap-3">
-        <div className="flex items-center bg-white rounded-lg p-1 border border-gray-200 shadow-md">
-          <Button onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) - 1)}>-</Button>
-          <span className="w-24 text-center text-sm font-bold text-gray-800">{item.amount}</span>
-          <Button onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) + 1)}>+</Button>
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 flex flex-col items-center justify-center gap-3">
+        <div className="flex items-center bg-card rounded-lg p-1 border border-border shadow-md">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) - 1)}
+          >
+            -
+          </Button>
+          <span className="w-16 text-center text-sm font-bold">{item.amount}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onUpdateAmount(item.id, (item.amount ?? 0) + 1)}
+          >
+            +
+          </Button>
         </div>
         {showAmount || showPrice || showTotalValue ? null : (
-          <div className="text-[10px] text-gray-500 font-mono flex flex-col items-center">
-            <span className="text-green-600">${item.price.toLocaleString()}</span>
+          <div className="text-[10px] text-muted-foreground font-mono flex flex-col items-center">
+            <span className="text-green-600 dark:text-green-400">
+              ${item.price.toLocaleString()}
+            </span>
             <span>x{item.amount}</span>
           </div>
         )}
         <div className="flex gap-2">
-          <Button onClick={() => onEdit(item)}>
+          <Button size="icon" variant="outline" onClick={() => onEdit(item)}>
             <Edit size={16} />
           </Button>
-          <Button variant="destructive" onClick={() => onDelete(item.id)}>
+          <Button size="icon" variant="destructive" onClick={() => onDelete(item.id)}>
             <Trash2 size={16} />
           </Button>
         </div>
