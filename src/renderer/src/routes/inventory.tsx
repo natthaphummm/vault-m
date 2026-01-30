@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
-import InventoryGrid from '@renderer/components/common/InventoryGrid'
+import InventoryGrid from '@renderer/components/common/inventory-grid'
 import type { Item, InventoryItem } from '@renderer/types'
 import { INITIAL_ITEMS, INITIAL_INVENTORY } from '@renderer/data'
 import { Search, Filter, Plus } from 'lucide-react'

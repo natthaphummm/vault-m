@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import ItemCard from './ItemCard'
+import ItemCard from '@/components/common/item-card'
 
 import type { Item, InventoryItem } from '@renderer/types'
 
