@@ -1,5 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
+
 import InventoryGrid from '@renderer/components/common/InventoryGrid'
 import type { Item, InventoryItem } from '@renderer/types'
 import { INITIAL_ITEMS, INITIAL_INVENTORY } from '@renderer/data'
@@ -24,7 +26,7 @@ function Inventory() {
     if (confirm('Delete this item? Inventory data will be lost.')) {
       setItems((prev) => prev.filter((i) => i.id !== id))
       setInventory((prev) => prev.filter((i) => i.itemId !== id))
-      // showNotification('Item deleted', 'success')
+      toast.success('Item deleted')
     }
   }
 
