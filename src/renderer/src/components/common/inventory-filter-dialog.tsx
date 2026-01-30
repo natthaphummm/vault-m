@@ -1,6 +1,8 @@
-import { Filter, CheckSquare, Square, Layers } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Filter } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -8,6 +10,15 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 
 export default function InventoryFilterDialog({
   filterCategory,
@@ -34,78 +45,89 @@ export default function InventoryFilterDialog({
   showTotalValue: boolean
   setShowTotalValue: (show: boolean) => void
 }) {
+  const { t } = useTranslation()
+
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button onClick={() => {}}>
-          <Filter size={16} />
-          <span className="hidden sm:inline">Options</span>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Filter size={16} className="mr-2" />
+          <span className="hidden sm:inline">{t('inventory.filter.button-filter')}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>View Options</DialogTitle>
+          <DialogTitle>{t('inventory.filter.dialog-title')}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 py-2">
+        <div className="grid gap-6 py-4">
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Category</h4>
-            <div className="relative">
-              <select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-                className="w-full bg-white border border-gray-300 text-gray-700 text-sm p-2.5 rounded-lg appearance-none focus:border-blue-500 focus:outline-none"
-              >
+            <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              {t('inventory.filter.category-title')}
+            </Label>
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
                 {uniqueItemCategories.map((c) => (
-                  <option key={c} value={c}>
+                  <SelectItem key={c} value={c}>
                     {c}
-                  </option>
+                  </SelectItem>
                 ))}
-              </select>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                <Layers size={16} />
-              </div>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              {t('inventory.filter.filter-title')}
+            </Label>
+            <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
+              <Label htmlFor="in-stock" className="text-sm font-medium cursor-pointer">
+                {t('inventory.filter.filter-in-stock')}
+              </Label>
+              <Switch id="in-stock" checked={filterInStock} onCheckedChange={setFilterInStock} />
             </div>
           </div>
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Filters</h4>
-            <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-gray-50">
-              <span className="text-gray-700 text-sm font-medium">In Stock Only</span>
-              <button
-                onClick={() => setFilterInStock(!filterInStock)}
-                className={`w-11 h-6 rounded-full relative transition-colors ${filterInStock ? 'bg-blue-600' : 'bg-gray-300'}`}
-              >
+            <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              {t('inventory.filter.card-display-title')}
+            </Label>
+            <div className="grid gap-2">
+              {[
+                {
+                  label: t('inventory.filter.card-display-amount'),
+                  state: showAmount,
+                  set: setShowAmount,
+                  id: 'show-amount'
+                },
+                {
+                  label: t('inventory.filter.card-display-price'),
+                  state: showPrice,
+                  set: setShowPrice,
+                  id: 'show-price'
+                },
+                {
+                  label: t('inventory.filter.card-display-total-value'),
+                  state: showTotalValue,
+                  set: setShowTotalValue,
+                  id: 'show-total'
+                }
+              ].map((opt) => (
                 <div
-                  className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all shadow-sm ${filterInStock ? 'left-6' : 'left-1'}`}
-                ></div>
-              </button>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Card Display
-            </h4>
-            {[
-              { label: 'Show Amount', state: showAmount, set: setShowAmount },
-              { label: 'Show Unit Price', state: showPrice, set: setShowPrice },
-              { label: 'Show Total Value', state: showTotalValue, set: setShowTotalValue }
-            ].map((opt, i) => (
-              <div
-                key={i}
-                onClick={() => opt.set(!opt.state)}
-                className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-all ${opt.state ? 'border-blue-200 bg-blue-50' : 'border-gray-200 bg-white hover:bg-gray-50'}`}
-              >
-                <span
-                  className={`text-sm font-medium ${opt.state ? 'text-blue-700' : 'text-gray-600'}`}
+                  key={opt.id}
+                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                 >
-                  {opt.label}
-                </span>
-                {opt.state ? (
-                  <CheckSquare size={18} className="text-blue-600" />
-                ) : (
-                  <Square size={18} className="text-gray-400" />
-                )}
-              </div>
-            ))}
+                  <Label htmlFor={opt.id} className="text-sm font-medium cursor-pointer flex-1">
+                    {opt.label}
+                  </Label>
+                  <Checkbox
+                    id={opt.id}
+                    checked={opt.state}
+                    onCheckedChange={(checked) => opt.set(checked as boolean)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </DialogContent>

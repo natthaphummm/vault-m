@@ -9,6 +9,20 @@
       "label-image": "Image",
       "button-save": "Save",
       "button-reset": "Reset"
+    },
+    "filter": {
+      "button-filter": "Filter",
+      "dialog-title": "Filter Items",
+      "dialog-description": "Filter items by category",
+      "dialog-footer-button-reset": "Reset",
+      "dialog-footer-button-apply": "Apply",
+      "category-title": "Category",
+      "filter-title": "Filters",
+      "filter-in-stock": "In Stock Only",
+      "card-display-title": "Card Display",
+      "card-display-amount": "Show Amount",
+      "card-display-price": "Show Unit Price",
+      "card-display-total-value": "Show Total Value"
     }
   }
 }
