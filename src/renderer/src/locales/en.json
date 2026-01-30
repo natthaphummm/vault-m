@@ -1,0 +1,14 @@
+{
+  "inventory": {
+    "form-item": {
+      "title-new": "New Item",
+      "title-edit": "Edit Item",
+      "label-name": "Name",
+      "label-price": "Price",
+      "label-category": "Category",
+      "label-image": "Image",
+      "button-save": "Save",
+      "button-reset": "Reset"
+    }
+  }
+}

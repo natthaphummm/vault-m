@@ -1,5 +1,7 @@
+import { useTranslation } from 'react-i18next'
 import { useForm } from '@tanstack/react-form'
 import { Plus } from 'lucide-react'
+
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,6 +26,8 @@ export default function InventoryFormItem({
   setEditingItem: (item: Item | null) => void
   onSave: (values: ItemForm) => void
 }) {
+  const { t } = useTranslation()
+
   const form = useForm({
     defaultValues: {
       name: item?.name || '',
@@ -44,12 +48,14 @@ export default function InventoryFormItem({
       <DialogTrigger>
         <Button onClick={() => setEditingItem}>
           <Plus size={16} />
-          <span className="hidden sm:inline">New Item</span>
+          <span className="hidden sm:inline">{t('inventory.form-item.title-new')}</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{item ? 'Edit Item' : 'New Item'}</DialogTitle>
+          <DialogTitle>
+            {item ? t('inventory.form-item.title-edit') : t('inventory.form-item.title-new')}
+          </DialogTitle>
         </DialogHeader>
         <form
           id="create-item-form"
@@ -65,7 +71,9 @@ export default function InventoryFormItem({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Item Name</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t('inventory.form-item.label-name')}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -73,7 +81,7 @@ export default function InventoryFormItem({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      placeholder="Item name"
+                      placeholder={t('inventory.form-item.label-name')}
                       autoComplete="off"
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -87,7 +95,9 @@ export default function InventoryFormItem({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Item Price</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t('inventory.form-item.label-price')}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -95,7 +105,7 @@ export default function InventoryFormItem({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(Number(e.target.value))}
                       aria-invalid={isInvalid}
-                      placeholder="Item price"
+                      placeholder={t('inventory.form-item.label-price')}
                       autoComplete="off"
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -109,7 +119,9 @@ export default function InventoryFormItem({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Item Category</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t('inventory.form-item.label-category')}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -117,7 +129,7 @@ export default function InventoryFormItem({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      placeholder="Item category"
+                      placeholder={t('inventory.form-item.label-category')}
                       autoComplete="off"
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -131,7 +143,9 @@ export default function InventoryFormItem({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Item Image</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t('inventory.form-item.label-image')}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -139,7 +153,7 @@ export default function InventoryFormItem({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      placeholder="Item image"
+                      placeholder={t('inventory.form-item.label-image')}
                       autoComplete="off"
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -152,10 +166,10 @@ export default function InventoryFormItem({
         <DialogFooter>
           <Field orientation="horizontal">
             <Button type="button" variant="outline" onClick={() => form.reset()}>
-              Reset
+              {t('inventory.form-item.button-reset')}
             </Button>
             <Button type="submit" form="create-item-form">
-              Submit
+              {t('inventory.form-item.button-save')}
             </Button>
           </Field>
         </DialogFooter>
