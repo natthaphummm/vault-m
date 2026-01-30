@@ -3,7 +3,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
-import { Home, Inbox, Settings } from 'lucide-react'
+import { Home, Backpack, Toolbox, Settings } from 'lucide-react'
 
 const items = [
   {
@@ -12,13 +12,18 @@ const items = [
     icon: Home
   },
   {
-    title: 'About',
-    url: '/about',
-    icon: Inbox
+    title: 'Inventory',
+    url: '/inventory',
+    icon: Backpack
+  },
+  {
+    title: 'Crafting',
+    url: '/crafting',
+    icon: Toolbox
   },
   {
     title: 'Settings',
-    url: '#',
+    url: '/setting',
     icon: Settings
   }
 ]
