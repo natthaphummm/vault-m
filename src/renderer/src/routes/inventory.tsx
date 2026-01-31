@@ -1,28 +1,75 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useMemo } from 'react'
 import { toast } from 'react-toastify'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 import InventoryGrid from '@/components/common/inventory-grid'
 import InventorySearchSection from '@/components/common/inventory-search-bar'
 import InventoryFormItem from '@renderer/components/common/inventory-form-item'
 import InventoryFilterDialog from '@/components/common/inventory-filter-dialog'
 
-import type { Item, InventoryItem, ItemForm } from '@renderer/types'
-import { INITIAL_ITEMS, INITIAL_INVENTORY } from '@renderer/data'
+import type { Item, ItemForm } from '@renderer/types'
 
 export const Route = createFileRoute('/inventory')({
   component: Inventory
 })
 
 function Inventory() {
-  const [items, setItems] = useState<Item[]>(INITIAL_ITEMS)
-  const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY)
+  const queryClient = useQueryClient()
   const [editingItem, setEditingItem] = useState<Item | null>(null)
+
+  const { data: items = [] } = useQuery({
+    queryKey: ['items'],
+    queryFn: async () => await window.api.getItems()
+  })
+
+  const { data: inventory = [] } = useQuery({
+    queryKey: ['inventory'],
+    queryFn: async () => await window.api.getInventory()
+  })
 
   const uniqueItemCategories = useMemo(
     () => ['All', ...Array.from(new Set(items.map((i) => i.category || 'General')))],
     [items]
   )
+
+  const saveItemMutation = useMutation({
+    mutationFn: (item: Item) => window.api.saveItem(item),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] })
+      toast.success(editingItem ? 'Item updated' : 'Item created')
+      setEditingItem(null)
+    },
+    onError: (error) => {
+      console.error(error)
+      toast.error('Failed to save item')
+    }
+  })
+
+  const deleteItemMutation = useMutation({
+    mutationFn: (id: number) => window.api.deleteItem(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['items'] })
+      queryClient.invalidateQueries({ queryKey: ['inventory'] })
+      toast.success('Item deleted')
+    },
+    onError: (error) => {
+      console.error(error)
+      toast.error('Failed to delete item')
+    }
+  })
+
+  const updateInventoryMutation = useMutation({
+    mutationFn: ({ itemId, amount }: { itemId: number; amount: number }) =>
+      window.api.updateInventory(itemId, amount),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['inventory'] })
+    },
+    onError: (error) => {
+      console.error(error)
+      toast.error('Failed to update inventory')
+    }
+  })
 
   const handleSaveItem = (formData: ItemForm) => {
     const newItem: Item = {
@@ -32,36 +79,17 @@ function Inventory() {
       category: formData.category,
       image: formData.image
     }
-
-    if (editingItem) {
-      setItems((prev) => prev.map((i) => (i.id === newItem.id ? newItem : i)))
-      toast.success('Item updated')
-    } else {
-      setItems((prev) => [...prev, newItem])
-      toast.success('Item created')
-    }
-    setEditingItem(null)
+    saveItemMutation.mutate(newItem)
   }
 
   const handleDeleteItem = (id: number) => {
     if (confirm('Delete this item? Inventory data will be lost.')) {
-      setItems((prev) => prev.filter((i) => i.id !== id))
-      setInventory((prev) => prev.filter((i) => i.itemId !== id))
-      toast.success('Item deleted')
+      deleteItemMutation.mutate(id)
     }
   }
 
   const handleUpdateAmount = (itemId: number, newAmount: number) => {
-    if (newAmount <= 0) {
-      setInventory((prev) => prev.filter((i) => i.itemId !== itemId))
-    } else {
-      setInventory((prev) => {
-        const exists = prev.find((i) => i.itemId === itemId)
-        return exists
-          ? prev.map((i) => (i.itemId === itemId ? { ...i, amount: newAmount } : i))
-          : [...prev, { itemId, amount: newAmount }]
-      })
-    }
+    updateInventoryMutation.mutate({ itemId, amount: newAmount })
   }
 
   return (
