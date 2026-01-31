@@ -1,34 +1,26 @@
 import { useMemo } from 'react'
 
 import ItemCard from '@/components/common/item-card'
+import { useInvFilterStore } from '@renderer/store/useInvFilterStore'
 
 import type { Item, InventoryItem } from '@renderer/types'
 
 export default function InventoryGrid({
   items,
   inventory,
-  searchQuery,
-  filterInStock,
-  filterCategory,
-  showAmount,
-  showPrice,
-  showTotalValue,
   onUpdateAmount,
   onEdit,
   onDelete
 }: {
   items: Item[]
   inventory: InventoryItem[]
-  searchQuery: string
-  filterInStock: boolean
-  filterCategory: string
-  showAmount: boolean
-  showPrice: boolean
-  showTotalValue: boolean
   onUpdateAmount: (id: number, amt: number) => void
   onEdit: (item: Item) => void
   onDelete: (id: number) => void
 }) {
+  const { searchQuery, filterInStock, filterCategory, showAmount, showPrice, showTotalValue } =
+    useInvFilterStore()
+
   const displayData = useMemo(() => {
     return items
       .map((item) => {

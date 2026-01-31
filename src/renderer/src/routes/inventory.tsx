@@ -17,12 +17,6 @@ export const Route = createFileRoute('/inventory')({
 function Inventory() {
   const [items, setItems] = useState<Item[]>(INITIAL_ITEMS)
   const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filterInStock, setFilterInStock] = useState(false)
-  const [filterCategory, setFilterCategory] = useState('All')
-  const [showAmount, setShowAmount] = useState(true)
-  const [showPrice, setShowPrice] = useState(true)
-  const [showTotalValue, setShowTotalValue] = useState(true)
   const [editingItem, setEditingItem] = useState<Item | null>(null)
 
   const uniqueItemCategories = useMemo(
@@ -77,20 +71,8 @@ function Inventory() {
       </h1>
 
       <div className="flex flex-row justify-between items-center mb-6 gap-2">
-        <InventorySearchSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <InventoryFilterDialog
-          filterCategory={filterCategory}
-          setFilterCategory={setFilterCategory}
-          uniqueItemCategories={uniqueItemCategories}
-          filterInStock={filterInStock}
-          setFilterInStock={setFilterInStock}
-          showAmount={showAmount}
-          setShowAmount={setShowAmount}
-          showPrice={showPrice}
-          setShowPrice={setShowPrice}
-          showTotalValue={showTotalValue}
-          setShowTotalValue={setShowTotalValue}
-        />
+        <InventorySearchSection />
+        <InventoryFilterDialog uniqueItemCategories={uniqueItemCategories} />
         <InventoryFormItem
           item={editingItem}
           setEditingItem={() => {
@@ -103,12 +85,6 @@ function Inventory() {
       <InventoryGrid
         items={items}
         inventory={inventory}
-        searchQuery={searchQuery}
-        filterInStock={filterInStock}
-        filterCategory={filterCategory}
-        showAmount={showAmount}
-        showPrice={showPrice}
-        showTotalValue={showTotalValue}
         onUpdateAmount={handleUpdateAmount}
         onEdit={(item) => {
           setEditingItem(item)

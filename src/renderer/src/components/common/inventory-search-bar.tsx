@@ -1,13 +1,10 @@
 import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { useInvFilterStore } from '@/store/useInvFilterStore'
 
-export default function InventorySearchSection({
-  searchQuery,
-  setSearchQuery
-}: {
-  searchQuery: string
-  setSearchQuery: (query: string) => void
-}) {
+export default function InventorySearchSection() {
+  const { searchQuery, setSearchQuery } = useInvFilterStore()
+
   return (
     <div className="relative w-full">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2" size={18} />

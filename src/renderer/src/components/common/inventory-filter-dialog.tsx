@@ -19,33 +19,26 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { useInvFilterStore } from '@/store/useInvFilterStore'
 
 export default function InventoryFilterDialog({
-  filterCategory,
-  setFilterCategory,
-  uniqueItemCategories,
-  filterInStock,
-  setFilterInStock,
-  showAmount,
-  setShowAmount,
-  showPrice,
-  setShowPrice,
-  showTotalValue,
-  setShowTotalValue
+  uniqueItemCategories
 }: {
-  filterCategory: string
-  setFilterCategory: (category: string) => void
   uniqueItemCategories: string[]
-  filterInStock: boolean
-  setFilterInStock: (inStock: boolean) => void
-  showAmount: boolean
-  setShowAmount: (show: boolean) => void
-  showPrice: boolean
-  setShowPrice: (show: boolean) => void
-  showTotalValue: boolean
-  setShowTotalValue: (show: boolean) => void
 }) {
   const { t } = useTranslation()
+  const {
+    filterCategory,
+    setFilterCategory,
+    filterInStock,
+    setFilterInStock,
+    showAmount,
+    setShowAmount,
+    showPrice,
+    setShowPrice,
+    showTotalValue,
+    setShowTotalValue
+  } = useInvFilterStore()
 
   return (
     <Dialog>
