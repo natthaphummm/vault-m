@@ -1,7 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 import InventoryGrid from '@/components/common/inventory-grid'
 import InventorySearchSection from '@/components/common/inventory-search-bar'
@@ -17,6 +21,8 @@ export const Route = createFileRoute('/inventory')({
 function Inventory() {
   const queryClient = useQueryClient()
   const [editingItem, setEditingItem] = useState<Item | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { t } = useTranslation()
 
   const { data: items = [] } = useQuery({
     queryKey: ['items'],
@@ -39,6 +45,7 @@ function Inventory() {
       queryClient.invalidateQueries({ queryKey: ['items'] })
       toast.success(editingItem ? 'Item updated' : 'Item created')
       setEditingItem(null)
+      setIsDialogOpen(false)
     },
     onError: (error) => {
       console.error(error)
@@ -102,11 +109,20 @@ function Inventory() {
         <div className="flex flex-row justify-between items-start sm:items-center mb-6 gap-2">
           <InventorySearchSection />
           <InventoryFilterDialog uniqueItemCategories={uniqueItemCategories} />
+          <Button
+            onClick={() => {
+              setEditingItem(null)
+              setIsDialogOpen(true)
+            }}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            <span className="hidden sm:inline">{t('inventory.form-item.title-new')}</span>
+          </Button>
+
           <InventoryFormItem
             item={editingItem}
-            setEditingItem={() => {
-              setEditingItem(null)
-            }}
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
             onSave={handleSaveItem}
           />
         </div>
@@ -118,6 +134,7 @@ function Inventory() {
         onUpdateAmount={handleUpdateAmount}
         onEdit={(item) => {
           setEditingItem(item)
+          setIsDialogOpen(true)
         }}
         onDelete={handleDeleteItem}
       />

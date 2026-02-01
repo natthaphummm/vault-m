@@ -8,7 +8,7 @@
       "label-category": "Category",
       "label-image": "Image",
       "button-save": "Save",
-      "button-reset": "Reset"
+      "button-cancel": "Cancel"
     },
     "filter": {
       "button-filter": "Filter",

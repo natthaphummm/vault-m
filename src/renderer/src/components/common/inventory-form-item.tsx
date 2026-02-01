@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useForm } from '@tanstack/react-form'
-import { Plus } from 'lucide-react'
-
+import { useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,9 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose
+  DialogFooter
 } from '@/components/ui/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 
@@ -20,11 +17,13 @@ import type { Item, ItemForm } from '@/types'
 
 export default function InventoryFormItem({
   item,
-  setEditingItem,
+  open,
+  onOpenChange,
   onSave
 }: {
   item: Item | null
-  setEditingItem: (item: Item | null) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onSave: (values: ItemForm) => void
 }) {
   const { t } = useTranslation()
@@ -45,14 +44,20 @@ export default function InventoryFormItem({
     }
   })
 
+  // Reset form when item changes or dialog opens
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        name: item?.name || '',
+        price: item?.price || 0,
+        category: item?.category || '',
+        image: item?.image || ''
+      })
+    }
+  }, [item, open])
+
   return (
-    <Dialog>
-      <DialogTrigger>
-        <Button onClick={() => setEditingItem}>
-          <Plus size={16} />
-          <span className="hidden sm:inline">{t('inventory.form-item.title-new')}</span>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -63,6 +68,7 @@ export default function InventoryFormItem({
           id="create-item-form"
           onSubmit={(e) => {
             e.preventDefault()
+            e.stopPropagation()
             form.handleSubmit()
           }}
         >
@@ -167,14 +173,12 @@ export default function InventoryFormItem({
         </form>
         <DialogFooter>
           <Field orientation="horizontal">
-            <Button type="button" variant="outline" onClick={() => form.reset()}>
-              {t('inventory.form-item.button-reset')}
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              {t('inventory.form-item.button-cancel')}
             </Button>
-            <DialogClose asChild>
-              <Button type="submit" form="create-item-form">
-                {t('inventory.form-item.button-save')}
-              </Button>
-            </DialogClose>
+            <Button type="submit" form="create-item-form">
+              {t('inventory.form-item.button-save')}
+            </Button>
           </Field>
         </DialogFooter>
       </DialogContent>
