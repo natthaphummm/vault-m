@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import ItemCard from '@/components/common/item-card'
 import { Card, CardContent } from '@/components/ui/card'
-import { useInvFilterStore } from '@renderer/store/useInvFilterStore'
+import { useInventoryStore } from '@/store/useInventoryStore'
 import { PackageX } from 'lucide-react'
 
 import type { Item, InventoryItem } from '@renderer/types'
@@ -11,17 +11,22 @@ export default function InventoryGrid({
   items,
   inventory,
   onUpdateAmount,
-  onEdit,
   onDelete
 }: {
   items: Item[]
   inventory: InventoryItem[]
   onUpdateAmount: (id: number, amt: number) => void
-  onEdit: (item: Item) => void
   onDelete: (id: number) => void
 }) {
-  const { searchQuery, filterInStock, filterCategory, showAmount, showPrice, showTotalValue } =
-    useInvFilterStore()
+  const {
+    searchQuery,
+    filterInStock,
+    filterCategory,
+    showAmount,
+    showPrice,
+    showTotalValue,
+    openEditItemDialog
+  } = useInventoryStore()
 
   const displayData = useMemo(() => {
     return items
@@ -47,7 +52,7 @@ export default function InventoryGrid({
           showPrice={showPrice}
           showTotalValue={showTotalValue}
           onUpdateAmount={onUpdateAmount}
-          onEdit={onEdit}
+          onEdit={openEditItemDialog}
           onDelete={onDelete}
         />
       ))}

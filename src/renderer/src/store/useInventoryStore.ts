@@ -1,6 +1,8 @@
 import { create } from 'zustand'
+import { Item } from '@renderer/types'
 
-interface InvFilterState {
+interface InventoryState {
+    // Filter State
     searchQuery: string
     setSearchQuery: (query: string) => void
     filterInStock: boolean
@@ -14,9 +16,19 @@ interface InvFilterState {
     showTotalValue: boolean
     setShowTotalValue: (show: boolean) => void
     resetFilters: () => void
+
+    // Edit/Dialog State
+    editingItem: Item | null
+    isDialogOpen: boolean
+    setEditingItem: (item: Item | null) => void
+    setIsDialogOpen: (isOpen: boolean) => void
+    openNewItemDialog: () => void
+    openEditItemDialog: (item: Item) => void
+    closeDialog: () => void
 }
 
-export const useInvFilterStore = create<InvFilterState>((set) => ({
+export const useInventoryStore = create<InventoryState>((set) => ({
+    // Filter State
     searchQuery: '',
     setSearchQuery: (searchQuery) => set({ searchQuery }),
     filterInStock: false,
@@ -37,5 +49,14 @@ export const useInvFilterStore = create<InvFilterState>((set) => ({
             showAmount: true,
             showPrice: true,
             showTotalValue: true
-        })
+        }),
+
+    // Edit/Dialog State
+    editingItem: null,
+    isDialogOpen: false,
+    setEditingItem: (editingItem) => set({ editingItem }),
+    setIsDialogOpen: (isDialogOpen) => set({ isDialogOpen }),
+    openNewItemDialog: () => set({ editingItem: null, isDialogOpen: true }),
+    openEditItemDialog: (item) => set({ editingItem: item, isDialogOpen: true }),
+    closeDialog: () => set({ isDialogOpen: false, editingItem: null })
 }))

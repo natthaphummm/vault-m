@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useForm } from '@tanstack/react-form'
 import { useEffect } from 'react'
+import { useInventoryStore } from '@/store/useInventoryStore'
+
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,27 +15,25 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 
 import { ItemFormSchema } from '@/types'
-import type { Item, ItemForm } from '@/types'
+import type { ItemForm } from '@/types'
 
 export default function InventoryFormItem({
-  item,
-  open,
   onOpenChange,
   onSave
 }: {
-  item: Item | null
-  open: boolean
   onOpenChange: (open: boolean) => void
   onSave: (values: ItemForm) => void
 }) {
+  const { editingItem, isDialogOpen } = useInventoryStore()
+
   const { t } = useTranslation()
 
   const form = useForm({
     defaultValues: {
-      name: item?.name || '',
-      price: item?.price || 0,
-      category: item?.category || '',
-      image: item?.image || ''
+      name: editingItem?.name || '',
+      price: editingItem?.price || 0,
+      category: editingItem?.category || '',
+      image: editingItem?.image || ''
     },
     validators: {
       onSubmit: ItemFormSchema
@@ -46,22 +46,22 @@ export default function InventoryFormItem({
 
   // Reset form when item changes or dialog opens
   useEffect(() => {
-    if (open) {
+    if (isDialogOpen) {
       form.reset({
-        name: item?.name || '',
-        price: item?.price || 0,
-        category: item?.category || '',
-        image: item?.image || ''
+        name: editingItem?.name || '',
+        price: editingItem?.price || 0,
+        category: editingItem?.category || '',
+        image: editingItem?.image || ''
       })
     }
-  }, [item, open])
+  }, [editingItem, isDialogOpen])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isDialogOpen} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {item ? t('inventory.form-item.title-edit') : t('inventory.form-item.title-new')}
+            {editingItem ? t('inventory.form-item.title-edit') : t('inventory.form-item.title-new')}
           </DialogTitle>
         </DialogHeader>
         <form

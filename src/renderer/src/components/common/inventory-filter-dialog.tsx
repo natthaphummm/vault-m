@@ -19,7 +19,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { useInvFilterStore } from '@/store/useInvFilterStore'
+import { useInventoryStore } from '@/store/useInventoryStore'
 
 export default function InventoryFilterDialog({
   uniqueItemCategories
@@ -38,7 +38,7 @@ export default function InventoryFilterDialog({
     setShowPrice,
     showTotalValue,
     setShowTotalValue
-  } = useInvFilterStore()
+  } = useInventoryStore()
 
   return (
     <Dialog>

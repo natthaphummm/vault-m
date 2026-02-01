@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+import { useInventoryStore } from '@/store/useInventoryStore'
 import InventoryGrid from '@/components/common/inventory-grid'
 import InventorySearchSection from '@/components/common/inventory-search-bar'
 import InventoryFormItem from '@renderer/components/common/inventory-form-item'
@@ -20,9 +21,9 @@ export const Route = createFileRoute('/inventory')({
 
 function Inventory() {
   const queryClient = useQueryClient()
-  const [editingItem, setEditingItem] = useState<Item | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { t } = useTranslation()
+
+  const { editingItem, setIsDialogOpen, openNewItemDialog, closeDialog } = useInventoryStore()
 
   const { data: items = [] } = useQuery({
     queryKey: ['items'],
@@ -44,8 +45,7 @@ function Inventory() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['items'] })
       toast.success(editingItem ? 'Item updated' : 'Item created')
-      setEditingItem(null)
-      setIsDialogOpen(false)
+      closeDialog()
     },
     onError: (error) => {
       console.error(error)
@@ -109,20 +109,13 @@ function Inventory() {
         <div className="flex flex-row justify-between items-start sm:items-center mb-6 gap-2">
           <InventorySearchSection />
           <InventoryFilterDialog uniqueItemCategories={uniqueItemCategories} />
-          <Button
-            onClick={() => {
-              setEditingItem(null)
-              setIsDialogOpen(true)
-            }}
-          >
+          <Button onClick={openNewItemDialog}>
             <Plus className="mr-2 h-4 w-4" />
             <span className="hidden sm:inline">{t('inventory.form-item.title-new')}</span>
           </Button>
 
           <InventoryFormItem
-            item={editingItem}
-            open={isDialogOpen}
-            onOpenChange={setIsDialogOpen}
+            onOpenChange={(open) => (open ? setIsDialogOpen(true) : closeDialog())}
             onSave={handleSaveItem}
           />
         </div>
@@ -132,10 +125,6 @@ function Inventory() {
         items={items}
         inventory={inventory}
         onUpdateAmount={handleUpdateAmount}
-        onEdit={(item) => {
-          setEditingItem(item)
-          setIsDialogOpen(true)
-        }}
         onDelete={handleDeleteItem}
       />
     </div>
