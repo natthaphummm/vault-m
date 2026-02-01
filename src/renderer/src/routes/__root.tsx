@@ -31,7 +31,7 @@ const items = [
 const RootLayout = () => (
   <SidebarProvider>
     <AppSidebar items={items} />
-    <main>
+    <main className="w-full">
       <SidebarTrigger />
       <Outlet />
     </main>

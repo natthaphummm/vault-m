@@ -93,21 +93,23 @@ function Inventory() {
   }
 
   return (
-    <div className="p-2">
-      <h1 className="mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight text-balance">
-        Inventory
-      </h1>
+    <div className="w-full">
+      <div className="px-4 md:px-6 pt-4 md:pt-6">
+        <h1 className="mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight text-balance">
+          Inventory
+        </h1>
 
-      <div className="flex flex-row justify-between items-center mb-6 gap-2">
-        <InventorySearchSection />
-        <InventoryFilterDialog uniqueItemCategories={uniqueItemCategories} />
-        <InventoryFormItem
-          item={editingItem}
-          setEditingItem={() => {
-            setEditingItem(null)
-          }}
-          onSave={handleSaveItem}
-        />
+        <div className="flex flex-row justify-between items-start sm:items-center mb-6 gap-2">
+          <InventorySearchSection />
+          <InventoryFilterDialog uniqueItemCategories={uniqueItemCategories} />
+          <InventoryFormItem
+            item={editingItem}
+            setEditingItem={() => {
+              setEditingItem(null)
+            }}
+            onSave={handleSaveItem}
+          />
+        </div>
       </div>
 
       <InventoryGrid
