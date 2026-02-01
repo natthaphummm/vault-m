@@ -10,7 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter
+  DialogFooter,
+  DialogClose
 } from '@/components/ui/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 
@@ -40,6 +41,7 @@ export default function InventoryFormItem({
     },
     onSubmit: async ({ value }) => {
       onSave(value)
+      form.reset()
     }
   })
 
@@ -168,9 +170,11 @@ export default function InventoryFormItem({
             <Button type="button" variant="outline" onClick={() => form.reset()}>
               {t('inventory.form-item.button-reset')}
             </Button>
-            <Button type="submit" form="create-item-form">
-              {t('inventory.form-item.button-save')}
-            </Button>
+            <DialogClose asChild>
+              <Button type="submit" form="create-item-form">
+                {t('inventory.form-item.button-save')}
+              </Button>
+            </DialogClose>
           </Field>
         </DialogFooter>
       </DialogContent>
