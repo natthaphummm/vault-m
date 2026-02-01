@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useMemo } from 'react'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 import InventoryGrid from '@/components/common/inventory-grid'

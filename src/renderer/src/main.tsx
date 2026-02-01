@@ -3,7 +3,7 @@ import './assets/main.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { ToastContainer } from 'react-toastify'
+import { Toaster } from 'sonner'
 import './i18n'
 
 // Import the generated route tree
@@ -31,7 +31,7 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
-      <ToastContainer />
+      <Toaster />
     </ThemeProvider>
   </StrictMode>
 )
