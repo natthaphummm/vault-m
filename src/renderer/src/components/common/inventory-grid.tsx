@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
 
 import ItemCard from '@/components/common/item-card'
+import { Card, CardContent } from '@/components/ui/card'
 import { useInvFilterStore } from '@renderer/store/useInvFilterStore'
+import { PackageX } from 'lucide-react'
 
 import type { Item, InventoryItem } from '@renderer/types'
 
@@ -50,9 +52,19 @@ export default function InventoryGrid({
         />
       ))}
       {displayData.length === 0 && (
-        <div className="col-span-full py-20 text-center text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
-          No items found
-        </div>
+        <Card className="col-span-full border-2 border-dashed bg-muted/50">
+          <CardContent className="flex flex-col items-center justify-center h-48 space-y-4 text-center">
+            <div className="p-3 rounded-full bg-background border shadow-sm">
+              <PackageX className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-semibold text-lg">No items found</h3>
+              <p className="text-sm text-muted-foreground">
+                Adjust your filters or add a new item to get started.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )
