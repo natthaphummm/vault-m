@@ -87,6 +87,10 @@ function Inventory() {
       image: formData.image
     }
     saveItemMutation.mutate(newItem)
+
+    if (formData.amount !== undefined) {
+      updateInventoryMutation.mutate({ itemId: newItem.id, amount: formData.amount })
+    }
   }
 
   const handleDeleteItem = (id: number) => {

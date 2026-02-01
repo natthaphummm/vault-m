@@ -5,6 +5,7 @@
       "title-edit": "Edit Item",
       "label-name": "Name",
       "label-price": "Price",
+      "label-amount": "Amount",
       "label-category": "Category",
       "label-image": "Image",
       "button-save": "Save",

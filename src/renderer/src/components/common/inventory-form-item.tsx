@@ -32,6 +32,7 @@ export default function InventoryFormItem({
     defaultValues: {
       name: editingItem?.name || '',
       price: editingItem?.price || 0,
+      amount: editingItem?.amount || 0,
       category: editingItem?.category || '',
       image: editingItem?.image || ''
     },
@@ -50,6 +51,7 @@ export default function InventoryFormItem({
       form.reset({
         name: editingItem?.name || '',
         price: editingItem?.price || 0,
+        amount: editingItem?.amount || 0,
         category: editingItem?.category || '',
         image: editingItem?.image || ''
       })
@@ -114,6 +116,30 @@ export default function InventoryFormItem({
                       onChange={(e) => field.handleChange(Number(e.target.value))}
                       aria-invalid={isInvalid}
                       placeholder={t('inventory.form-item.label-price')}
+                      autoComplete="off"
+                    />
+                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                  </Field>
+                )
+              }}
+            />
+            <form.Field
+              name="amount"
+              children={(field) => {
+                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      {t('inventory.form-item.label-amount')}
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(Number(e.target.value))}
+                      aria-invalid={isInvalid}
+                      placeholder={t('inventory.form-item.label-amount')}
                       autoComplete="off"
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
