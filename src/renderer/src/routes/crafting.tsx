@@ -12,7 +12,7 @@ import {
   DialogDescription
 } from '@/components/ui/dialog'
 import { CraftingToolbar } from '../components/crafting/crafting-toolbar'
-import { CraftingSplitView } from '../components/crafting/CraftingSplitView'
+import { CraftingSplitView } from '../components/crafting/crafting-split-view'
 import { RecipeForm } from '../components/crafting/RecipeForm'
 import { useCraftingStore } from '@/store/useCraftingStore'
 import { Recipe } from '@/types'

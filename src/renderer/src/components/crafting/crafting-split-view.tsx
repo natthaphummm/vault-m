@@ -21,7 +21,6 @@ import {
   Item as ItemComp,
   ItemActions,
   ItemContent,
-  ItemDescription,
   ItemMedia,
   ItemTitle
 } from '@/components/ui/item'
@@ -144,7 +143,7 @@ export const CraftingSplitView = ({
 
             <div className="flex flex-col md:flex-row h-full">
               {/* Details Column */}
-              <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 border-b md:border-b-0 md:border-r bg-gradient-to-b from-background to-muted/20">
+              <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 border-b md:border-b-0 md:border-r bg-linear-to-b from-background to-muted/20">
                 <div className="relative group mb-4 md:mb-8">
                   <div className="w-32 h-32 md:w-48 md:h-48 bg-card border rounded-3xl flex items-center justify-center relative shadow-lg">
                     {resultItem?.image ? (
