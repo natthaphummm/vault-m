@@ -108,7 +108,7 @@ export const CraftingSplitView = ({
 
       {/* Right Panel: Workspace */}
       <Card className="flex-1 border-border/50 shadow-sm relative flex flex-col overflow-hidden">
-        {selectedRecipe && resultItem ? (
+        {selectedRecipe ? (
           <div className="flex flex-col h-full">
             <div className="absolute top-4 right-4 flex gap-2 z-10">
               <Button
@@ -137,7 +137,7 @@ export const CraftingSplitView = ({
               <div className="flex-1 flex flex-col items-center justify-center p-8 border-b lg:border-b-0 lg:border-r bg-gradient-to-b from-background to-muted/20">
                 <div className="relative group mb-8">
                   <div className="w-48 h-48 bg-card border rounded-3xl flex items-center justify-center relative shadow-lg">
-                    {resultItem.image ? (
+                    {resultItem?.image ? (
                       <img src={resultItem.image} className="w-32 h-32 object-contain" />
                     ) : (
                       <Hammer size={64} className="text-muted-foreground" />
