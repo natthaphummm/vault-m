@@ -1,23 +1,10 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
+import { createApi } from './api'
+
 // Custom APIs for renderer
-const api = {
-  items: {
-    getAll: () => ipcRenderer.invoke('items:get-all'),
-    save: (item: any) => ipcRenderer.invoke('items:save', item),
-    delete: (id: number) => ipcRenderer.invoke('items:delete', id)
-  },
-  inventory: {
-    getAll: () => ipcRenderer.invoke('inventory:get-all'),
-    update: (itemId: number, amount: number) =>
-      ipcRenderer.invoke('inventory:update', { itemId, amount })
-  },
-  crafting: {
-    getAll: () => ipcRenderer.invoke('crafting:get-all'),
-    save: (recipe: any) => ipcRenderer.invoke('crafting:save', recipe)
-  }
-}
+export const api = createApi(ipcRenderer)
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
