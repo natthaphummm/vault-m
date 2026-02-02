@@ -66,9 +66,14 @@ export const CraftingSplitView = ({
   const resultItem = successResult ? getItem(successResult.itemId) : null
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-full">
+    <div className="flex flex-col md:flex-row gap-4 md:gap-6 h-full">
       {/* Left Panel: Recipe List */}
-      <Card className="w-full lg:w-80 flex flex-col overflow-hidden border-border/50 shadow-sm">
+      <Card
+        className={cn(
+          'w-full md:w-80 flex-col overflow-hidden border-border/50 shadow-sm',
+          selectedRecipe ? 'hidden md:flex' : 'flex'
+        )}
+      >
         <ScrollArea className="flex-1 p-2">
           <div className="space-y-1">
             {filteredRecipes.map((recipe) => {
@@ -107,14 +112,19 @@ export const CraftingSplitView = ({
       </Card>
 
       {/* Right Panel: Workspace */}
-      <Card className="flex-1 border-border/50 shadow-sm relative flex flex-col overflow-hidden">
+      <Card
+        className={cn(
+          'flex-1 border-border/50 shadow-sm relative flex-col overflow-hidden',
+          selectedRecipe ? 'flex' : 'hidden md:flex'
+        )}
+      >
         {selectedRecipe ? (
           <div className="flex flex-col h-full">
             <div className="absolute top-4 right-4 flex gap-2 z-10">
               <Button
                 variant="outline"
                 size="icon"
-                className="lg:hidden"
+                className="md:hidden"
                 onClick={() => setSelectedRecipe(null)}
               >
                 <ArrowLeft size={18} />
@@ -132,15 +142,18 @@ export const CraftingSplitView = ({
               </Button>
             </div>
 
-            <div className="flex flex-col lg:flex-row h-full">
+            <div className="flex flex-col md:flex-row h-full">
               {/* Details Column */}
-              <div className="flex-1 flex flex-col items-center justify-center p-8 border-b lg:border-b-0 lg:border-r bg-gradient-to-b from-background to-muted/20">
-                <div className="relative group mb-8">
-                  <div className="w-48 h-48 bg-card border rounded-3xl flex items-center justify-center relative shadow-lg">
+              <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 border-b md:border-b-0 md:border-r bg-gradient-to-b from-background to-muted/20">
+                <div className="relative group mb-4 md:mb-8">
+                  <div className="w-32 h-32 md:w-48 md:h-48 bg-card border rounded-3xl flex items-center justify-center relative shadow-lg">
                     {resultItem?.image ? (
-                      <img src={resultItem.image} className="w-32 h-32 object-contain" />
+                      <img
+                        src={resultItem.image}
+                        className="w-20 h-20 md:w-32 md:h-32 object-contain"
+                      />
                     ) : (
-                      <Hammer size={64} className="text-muted-foreground" />
+                      <Hammer className="size-12 md:size-16 text-muted-foreground" />
                     )}
                     <Badge className="absolute -bottom-3 text-sm px-2 py-0.5">
                       x{successResult?.amount || 1}
@@ -152,17 +165,11 @@ export const CraftingSplitView = ({
                   {selectedRecipe.name}
                 </h2>
 
-                <div className="flex flex-wrap justify-center gap-4 mb-12">
-                  <Badge
-                    variant="outline"
-                    className="gap-1.5 py-1 px-3 bg-green-500/10 text-green-700 border-green-200 hover:bg-green-500/10"
-                  >
+                <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 md:mb-12">
+                  <Badge variant="outline">
                     <Zap size={14} /> {selectedRecipe.successChance}% Success
                   </Badge>
-                  <Badge
-                    variant="outline"
-                    className="gap-1.5 py-1 px-3 bg-amber-500/10 text-amber-700 border-amber-200 hover:bg-amber-500/10"
-                  >
+                  <Badge variant="outline">
                     <Anchor size={14} /> Cost: ${totalCost.toLocaleString()}
                   </Badge>
                 </div>
