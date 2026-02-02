@@ -10,12 +10,22 @@ import {
   ArrowLeft,
   Settings
 } from 'lucide-react'
-import { Item, Recipe, InventoryItem } from '../../types'
+import type { Item, Recipe, InventoryItem } from '@/types'
+
 import { CraftingItemRow } from './CraftingItemRow'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Item as ItemComp,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle
+} from '@/components/ui/item'
+
 import { cn } from '@/lib/utils'
 import { useCraftingStore } from '@/store/useCraftingStore'
 
@@ -56,12 +66,9 @@ export const CraftingSplitView = ({
   const resultItem = successResult ? getItem(successResult.itemId) : null
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-full min-h-[500px]">
+    <div className="flex flex-col lg:flex-row gap-6 h-full">
       {/* Left Panel: Recipe List */}
-      <Card
-        className={`w-full lg:w-80 flex flex-col overflow-hidden border-border/50 shadow-sm
-                ${selectedRecipe ? 'hidden lg:flex' : 'flex'}`}
-      >
+      <Card className="w-full lg:w-80 flex flex-col overflow-hidden border-border/50 shadow-sm">
         <ScrollArea className="flex-1 p-2">
           <div className="space-y-1">
             {filteredRecipes.map((recipe) => {
@@ -70,38 +77,26 @@ export const CraftingSplitView = ({
                 : null
               const isSelected = selectedRecipe?.id === recipe.id
               return (
-                <button
+                <ItemComp
                   key={recipe.id}
+                  variant={isSelected ? 'muted' : 'outline'}
                   onClick={() => setSelectedRecipe(recipe)}
-                  className={cn(
-                    'w-full text-left p-3 rounded-lg transition-all flex items-center gap-3 border border-transparent',
-                    isSelected
-                      ? 'bg-accent text-accent-foreground border-border/50 shadow-sm'
-                      : 'hover:bg-muted/50'
-                  )}
+                  className="cursor-pointer"
                 >
-                  <div
-                    className={cn(
-                      'w-10 h-10 rounded-md flex items-center justify-center shrink-0 border overflow-hidden bg-background',
-                      isSelected ? 'border-primary/20' : ''
-                    )}
-                  >
+                  <ItemMedia>
                     {resItem?.image ? (
-                      <img src={resItem.image} className="w-8 h-8 object-contain" />
+                      <img src={resItem.image} className="size-6 object-contain" />
                     ) : (
-                      <Hammer size={18} className="text-muted-foreground" />
+                      <Hammer className="size-6" />
                     )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-sm truncate">{recipe.name}</div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="secondary" className="text-[10px] px-1 h-5">
-                        {recipe.category}
-                      </Badge>
-                    </div>
-                  </div>
-                  {isSelected && <ChevronRight size={16} className="text-primary" />}
-                </button>
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{recipe.name}</ItemTitle>
+                  </ItemContent>
+                  <ItemActions>
+                    <ChevronRight size={16} />
+                  </ItemActions>
+                </ItemComp>
               )
             })}
             {filteredRecipes.length === 0 && (
@@ -112,10 +107,7 @@ export const CraftingSplitView = ({
       </Card>
 
       {/* Right Panel: Workspace */}
-      <Card
-        className={`flex-1 border-border/50 shadow-sm relative flex flex-col overflow-hidden 
-                ${!selectedRecipe ? 'hidden lg:flex' : 'flex'}`}
-      >
+      <Card className="flex-1 border-border/50 shadow-sm relative flex flex-col overflow-hidden">
         {selectedRecipe && resultItem ? (
           <div className="flex flex-col h-full">
             <div className="absolute top-4 right-4 flex gap-2 z-10">
