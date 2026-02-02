@@ -8,7 +8,9 @@ const api = {
   saveItem: (item: any) => ipcRenderer.invoke('items:save', item),
   deleteItem: (id: number) => ipcRenderer.invoke('items:delete', id),
   updateInventory: (itemId: number, amount: number) =>
-    ipcRenderer.invoke('inventory:update', { itemId, amount })
+    ipcRenderer.invoke('inventory:update', { itemId, amount }),
+  getCraftingRecipes: () => ipcRenderer.invoke('crafting:get-all'),
+  saveCraftingRecipe: (recipe: any) => ipcRenderer.invoke('crafting:save', recipe)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

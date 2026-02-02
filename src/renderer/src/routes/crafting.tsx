@@ -2,8 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { toast } from 'sonner'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Hammer, CheckCircle, XCircle } from 'lucide-react'
-
+import { XCircle, CheckCircle } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -13,9 +12,8 @@ import {
 } from '@/components/ui/dialog'
 import { CraftingToolbar } from '../components/crafting/crafting-toolbar'
 import { CraftingSplitView } from '../components/crafting/crafting-split-view'
-import { RecipeForm } from '../components/crafting/RecipeForm'
+import { CraftingForm } from '../components/crafting/crafting-form'
 import { useCraftingStore } from '@/store/useCraftingStore'
-import { Recipe } from '@/types'
 
 export const Route = createFileRoute('/crafting')({
   component: Crafting
@@ -52,21 +50,27 @@ function Crafting() {
     queryFn: async () => await window.api.getInventory()
   })
 
-  // Handlers
-  const handleSaveRecipe = (recipe: Recipe) => {
-    if (recipe.id !== 0) {
-      setRecipes((prev) => prev.map((r) => (r.id === recipe.id ? recipe : r)))
-      toast.success('Recipe updated')
-      if (selectedRecipe?.id === recipe.id) setSelectedRecipe(recipe)
-    } else {
-      setRecipes((prev) => [...prev, { ...recipe, id: Date.now() }])
-      toast.success('Recipe created')
+  // Fetch recipes
+  const { data: fetchedRecipes } = useQuery({
+    queryKey: ['recipes'],
+    queryFn: async () => await window.api.getCraftingRecipes()
+  })
+
+  // Sync recipes to store when fetched
+  useMemo(() => {
+    if (fetchedRecipes) {
+      setRecipes(fetchedRecipes)
     }
+  }, [fetchedRecipes, setRecipes])
+
+  // Handlers
+  const handleRecipeSaved = () => {
     closeAllModals()
   }
 
   const handleDeleteRecipe = (id: number) => {
     if (confirm('Delete this recipe?')) {
+      // TODO: Add delete API
       setRecipes((prev) => prev.filter((r) => r.id !== id))
       if (selectedRecipe?.id === id) setSelectedRecipe(null)
       toast.success('Recipe deleted')
@@ -151,11 +155,11 @@ function Crafting() {
             </DialogDescription>
           </DialogHeader>
           {editingRecipe && (
-            <RecipeForm
+            <CraftingForm
               initialData={editingRecipe}
               items={items}
               categories={uniqueRecipeCategories}
-              onSave={handleSaveRecipe}
+              onSave={handleRecipeSaved}
               onCancel={() => setIsRecipeModalOpen(false)}
             />
           )}
