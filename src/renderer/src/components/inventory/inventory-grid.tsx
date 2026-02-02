@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import ItemCard from '@/components/common/item-card'
+import ItemCard from '@/components/inventory/item-card'
 import { Card, CardContent } from '@/components/ui/card'
 import { useInventoryStore } from '@/store/useInventoryStore'
 import { PackageX } from 'lucide-react'

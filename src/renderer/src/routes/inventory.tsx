@@ -8,10 +8,10 @@ import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import { useInventoryStore } from '@/store/useInventoryStore'
-import InventoryGrid from '@/components/common/inventory-grid'
-import InventorySearchSection from '@/components/common/inventory-search-bar'
-import InventoryFormItem from '@renderer/components/common/inventory-form-item'
-import InventoryFilterDialog from '@/components/common/inventory-filter-dialog'
+import InventoryGrid from '@/components/inventory/inventory-grid'
+import InventorySearchSection from '@/components/inventory/inventory-search-bar'
+import InventoryFormItem from '@renderer/components/inventory/inventory-form-item'
+import InventoryFilterDialog from '@/components/inventory/inventory-filter-dialog'
 
 import type { Item, ItemForm } from '@renderer/types'
 
