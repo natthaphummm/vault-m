@@ -42,18 +42,18 @@ function Crafting() {
   // Data Fetching
   const { data: items = [] } = useQuery({
     queryKey: ['items'],
-    queryFn: async () => await window.api.getItems()
+    queryFn: async () => await window.api.items.getAll()
   })
 
   const { data: inventory = [] } = useQuery({
     queryKey: ['inventory'],
-    queryFn: async () => await window.api.getInventory()
+    queryFn: async () => await window.api.inventory.getAll()
   })
 
   // Fetch recipes
   const { data: fetchedRecipes } = useQuery({
     queryKey: ['recipes'],
-    queryFn: async () => await window.api.getCraftingRecipes()
+    queryFn: async () => await window.api.crafting.getAll()
   })
 
   // Sync recipes to store when fetched
@@ -88,7 +88,7 @@ function Crafting() {
           const currentAmount = currentInv ? currentInv.amount : 0
           // Optimistic update prevention: ensure we don't go below 0
           if (currentAmount < cost.amount) throw new Error('Not enough materials')
-          await window.api.updateInventory(cost.itemId, currentAmount - cost.amount)
+          await window.api.inventory.update(cost.itemId, currentAmount - cost.amount)
         }
       }
 
@@ -97,7 +97,7 @@ function Crafting() {
       for (const res of results) {
         const currentInv = inventory.find((i) => i.itemId === res.itemId)
         const currentAmount = currentInv ? currentInv.amount : 0
-        await window.api.updateInventory(res.itemId, currentAmount + res.amount)
+        await window.api.inventory.update(res.itemId, currentAmount + res.amount)
       }
 
       await queryClient.invalidateQueries({ queryKey: ['inventory'] })

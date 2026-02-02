@@ -27,12 +27,12 @@ function Inventory() {
 
   const { data: items = [] } = useQuery({
     queryKey: ['items'],
-    queryFn: async () => await window.api.getItems()
+    queryFn: async () => await window.api.items.getAll()
   })
 
   const { data: inventory = [] } = useQuery({
     queryKey: ['inventory'],
-    queryFn: async () => await window.api.getInventory()
+    queryFn: async () => await window.api.inventory.getAll()
   })
 
   const uniqueItemCategories = useMemo(
@@ -41,7 +41,7 @@ function Inventory() {
   )
 
   const saveItemMutation = useMutation({
-    mutationFn: (item: Item) => window.api.saveItem(item),
+    mutationFn: (item: Item) => window.api.items.save(item),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['items'] })
       toast.success(editingItem ? 'Item updated' : 'Item created')
@@ -54,7 +54,7 @@ function Inventory() {
   })
 
   const deleteItemMutation = useMutation({
-    mutationFn: (id: number) => window.api.deleteItem(id),
+    mutationFn: (id: number) => window.api.items.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['items'] })
       queryClient.invalidateQueries({ queryKey: ['inventory'] })
@@ -68,7 +68,7 @@ function Inventory() {
 
   const updateInventoryMutation = useMutation({
     mutationFn: ({ itemId, amount }: { itemId: number; amount: number }) =>
-      window.api.updateInventory(itemId, amount),
+      window.api.inventory.update(itemId, amount),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['inventory'] })
     },

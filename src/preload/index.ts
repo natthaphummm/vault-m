@@ -3,14 +3,20 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  getItems: () => ipcRenderer.invoke('items:get-all'),
-  getInventory: () => ipcRenderer.invoke('inventory:get-all'),
-  saveItem: (item: any) => ipcRenderer.invoke('items:save', item),
-  deleteItem: (id: number) => ipcRenderer.invoke('items:delete', id),
-  updateInventory: (itemId: number, amount: number) =>
-    ipcRenderer.invoke('inventory:update', { itemId, amount }),
-  getCraftingRecipes: () => ipcRenderer.invoke('crafting:get-all'),
-  saveCraftingRecipe: (recipe: any) => ipcRenderer.invoke('crafting:save', recipe)
+  items: {
+    getAll: () => ipcRenderer.invoke('items:get-all'),
+    save: (item: any) => ipcRenderer.invoke('items:save', item),
+    delete: (id: number) => ipcRenderer.invoke('items:delete', id)
+  },
+  inventory: {
+    getAll: () => ipcRenderer.invoke('inventory:get-all'),
+    update: (itemId: number, amount: number) =>
+      ipcRenderer.invoke('inventory:update', { itemId, amount })
+  },
+  crafting: {
+    getAll: () => ipcRenderer.invoke('crafting:get-all'),
+    save: (recipe: any) => ipcRenderer.invoke('crafting:save', recipe)
+  }
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

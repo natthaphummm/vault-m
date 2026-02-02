@@ -33,7 +33,7 @@ export const CraftingForm = ({
 
   const saveMutation = useMutation({
     mutationFn: async (data: CraftingRecipe) => {
-      return await window.api.saveCraftingRecipe(data)
+      return await window.api.crafting.save(data)
     },
     onSuccess: () => {
       toast.success(initialData.id ? 'Recipe updated' : 'Recipe created')

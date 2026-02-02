@@ -34,14 +34,26 @@ export interface CraftingRecipe {
   results: CraftingResult[]
 }
 
+export interface ItemsApi {
+  getAll: () => Promise<Item[]>
+  save: (item: Item) => Promise<boolean>
+  delete: (id: number) => Promise<boolean>
+}
+
+export interface InventoryApi {
+  getAll: () => Promise<InventoryItem[]>
+  update: (itemId: number, amount: number) => Promise<boolean>
+}
+
+export interface CraftingApi {
+  getAll: () => Promise<CraftingRecipe[]>
+  save: (recipe: CraftingRecipe) => Promise<boolean>
+}
+
 export interface IApi {
-  getItems: () => Promise<Item[]>
-  getInventory: () => Promise<InventoryItem[]>
-  saveItem: (item: Item) => Promise<boolean>
-  deleteItem: (id: number) => Promise<boolean>
-  updateInventory: (itemId: number, amount: number) => Promise<boolean>
-  getCraftingRecipes: () => Promise<CraftingRecipe[]>
-  saveCraftingRecipe: (recipe: CraftingRecipe) => Promise<boolean>
+  items: ItemsApi
+  inventory: InventoryApi
+  crafting: CraftingApi
 }
 
 declare global {
