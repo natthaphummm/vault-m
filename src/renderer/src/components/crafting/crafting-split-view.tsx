@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import type { Item, Recipe, InventoryItem } from '@/types'
 
-import { CraftingItemRow } from './CraftingItemRow'
+import { CraftingItemRow } from './crafting-item-row'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'

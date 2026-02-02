@@ -1,8 +1,10 @@
-import { HelpCircle, Shield, Trash2, Box } from 'lucide-react'
-import { Item } from '../../types'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
 import { memo } from 'react'
+
+import { HelpCircle, Shield } from 'lucide-react'
+import { Item } from '@/types'
+import { cn } from '@/lib/utils'
+
+import { Badge } from '@/components/ui/badge'
 
 export const CraftingItemRow = memo(
   ({
