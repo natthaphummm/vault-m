@@ -141,15 +141,15 @@ export const CraftingSplitView = ({
               </Button>
             </div>
 
-            <div className="flex flex-col md:flex-row h-full">
+            <div className="flex flex-col xl:flex-row h-full">
               {/* Details Column */}
-              <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 border-b md:border-b-0 md:border-r bg-linear-to-b from-background to-muted/20">
-                <div className="relative group mb-4 md:mb-8">
-                  <div className="w-32 h-32 md:w-48 md:h-48 bg-card border rounded-3xl flex items-center justify-center relative shadow-lg">
+              <div className="flex-none xl:flex-1 xl:max-w-md flex flex-col items-center justify-center p-6 border-b xl:border-b-0 xl:border-r bg-linear-to-b from-background to-muted/20">
+                <div className="relative group mb-6">
+                  <div className="w-32 h-32 md:w-40 md:h-40 bg-card border rounded-3xl flex items-center justify-center relative shadow-lg">
                     {resultItem?.image ? (
                       <img
                         src={resultItem.image}
-                        className="w-20 h-20 md:w-32 md:h-32 object-contain"
+                        className="w-20 h-20 md:w-28 md:h-28 object-contain"
                       />
                     ) : (
                       <Hammer className="size-12 md:size-16 text-muted-foreground" />
@@ -160,11 +160,11 @@ export const CraftingSplitView = ({
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-black mb-6 text-center tracking-tight">
+                <h2 className="text-2xl font-black mb-4 text-center tracking-tight text-balance">
                   {selectedRecipe.name}
                 </h2>
 
-                <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 md:mb-12">
+                <div className="flex flex-wrap justify-center gap-3 mb-8">
                   <Badge variant="outline">
                     <Zap size={14} /> {selectedRecipe.successChance}% Success
                   </Badge>
@@ -189,14 +189,14 @@ export const CraftingSplitView = ({
               </div>
 
               {/* Ingredients Column */}
-              <div className="flex-1 flex flex-col bg-muted/10">
-                <div className="p-4 border-b bg-background">
+              <div className="flex-1 flex flex-col min-h-0 min-w-0 bg-muted/10">
+                <div className="p-4 border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10">
                   <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                     Required Materials
                   </h4>
                 </div>
                 <ScrollArea className="flex-1 p-4">
-                  <div className="space-y-2">
+                  <div className="space-y-2 grid grid-cols-1 gap-2 pb-4">
                     {selectedRecipe.costs.map((cost, idx) => {
                       const item = getItem(cost.itemId)
                       const invItem = inventory.find((i) => i.itemId === cost.itemId)
