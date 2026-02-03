@@ -10,7 +10,7 @@ import {
   ArrowLeft,
   Settings
 } from 'lucide-react'
-import type { Item, Recipe, InventoryItem } from '@/types'
+import type { Item, CraftingRecipe, InventoryItem } from '@/types'
 
 import { CraftingItemRow } from './crafting-item-row'
 import { Badge } from '@/components/ui/badge'
@@ -36,7 +36,7 @@ export const CraftingSplitView = ({
 }: {
   inventory: InventoryItem[]
   items: Item[]
-  onEditRecipe: (r: Recipe) => void
+  onEditRecipe: (r: CraftingRecipe) => void
   onDeleteRecipe: (id: number) => void
 }) => {
   // Global Store

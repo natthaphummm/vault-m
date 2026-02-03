@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { eq } from 'drizzle-orm'
 import { db } from '../db'
-import { crafting, recipeCosts, recipeResults } from '../db/schema'
+import { crafting, craftingCosts, craftingResults } from '../db/schema'
 
 export function registerCraftingHandlers(): void {
     ipcMain.handle('crafting:get-all', async () => {
@@ -20,26 +20,27 @@ export function registerCraftingHandlers(): void {
 
     ipcMain.handle('crafting:save', async (_, recipeData) => {
         try {
-            await db.transaction(async (tx) => {
+            db.transaction((tx) => {
                 const { id, costs, results, ...data } = recipeData
 
                 let recipeId = id;
                 if (id) {
-                    await tx.update(crafting).set(data).where(eq(crafting.id, id));
+                    tx.update(crafting).set(data).where(eq(crafting.id, id)).run();
                     // Clear existing relations to rewrite them (simple approach)
-                    await tx.delete(recipeCosts).where(eq(recipeCosts.recipeId, id));
-                    await tx.delete(recipeResults).where(eq(recipeResults.recipeId, id));
+                    tx.delete(craftingCosts).where(eq(craftingCosts.craftingId, id)).run();
+                    tx.delete(craftingResults).where(eq(craftingResults.craftingId, id)).run();
                 } else {
-                    const [inserted] = await tx.insert(crafting).values(data).returning({ id: crafting.id });
+                    const inserted = tx.insert(crafting).values(data).returning({ id: crafting.id }).get();
+                    if (!inserted) throw new Error('Failed to insert recipe');
                     recipeId = inserted.id;
                 }
 
                 if (costs && costs.length > 0) {
-                    await tx.insert(recipeCosts).values(costs.map(c => ({ ...c, recipeId })));
+                    tx.insert(craftingCosts).values(costs.map(c => ({ ...c, craftingId: recipeId }))).run();
                 }
 
                 if (results && results.length > 0) {
-                    await tx.insert(recipeResults).values(results.map(r => ({ ...r, recipeId })));
+                    tx.insert(craftingResults).values(results.map(r => ({ ...r, craftingId: recipeId }))).run();
                 }
             })
             return true
