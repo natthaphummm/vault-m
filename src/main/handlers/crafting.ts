@@ -49,4 +49,18 @@ export function registerCraftingHandlers(): void {
             throw e
         }
     })
+
+    ipcMain.handle('crafting:delete', async (_, id: number) => {
+        try {
+            db.transaction((tx) => {
+                tx.delete(craftingCosts).where(eq(craftingCosts.craftingId, id)).run();
+                tx.delete(craftingResults).where(eq(craftingResults.craftingId, id)).run();
+                tx.delete(crafting).where(eq(crafting.id, id)).run();
+            })
+            return true
+        } catch (e) {
+            console.error('Failed to delete crafting recipe:', e)
+            return false
+        }
+    })
 }

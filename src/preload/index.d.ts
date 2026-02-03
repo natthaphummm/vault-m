@@ -48,6 +48,7 @@ export interface InventoryApi {
 export interface CraftingApi {
   getAll: () => Promise<CraftingRecipe[]>
   save: (recipe: CraftingRecipe) => Promise<boolean>
+  delete: (id: number) => Promise<boolean>
 }
 
 export interface IApi {

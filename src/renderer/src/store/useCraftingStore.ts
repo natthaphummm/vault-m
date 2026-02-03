@@ -8,6 +8,7 @@ interface CraftingState {
     setRecipes: (recipes: CraftingRecipe[] | ((prev: CraftingRecipe[]) => CraftingRecipe[])) => void
     fetchRecipes: () => Promise<void>
     saveRecipe: (recipe: CraftingRecipe) => Promise<void>
+    deleteRecipe: (id: number) => Promise<void>
 
     // Selection & Filtering
     selectedRecipe: CraftingRecipe | null
@@ -54,6 +55,18 @@ export const useCraftingStore = create<CraftingState>((set, get) => ({
             set({ isRecipeModalOpen: false, editingRecipe: null })
         } catch (error) {
             console.error('Failed to save recipe:', error)
+            throw error
+        }
+    },
+    deleteRecipe: async (id) => {
+        try {
+            await window.api.crafting.delete(id)
+            await get().fetchRecipes()
+            set((state) => ({
+                selectedRecipe: state.selectedRecipe?.id === id ? null : state.selectedRecipe
+            }))
+        } catch (error) {
+            console.error('Failed to delete recipe:', error)
             throw error
         }
     },

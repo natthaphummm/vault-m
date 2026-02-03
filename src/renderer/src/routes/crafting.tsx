@@ -27,6 +27,7 @@ function Crafting() {
     setRecipes,
     recipes,
     fetchRecipes,
+    deleteRecipe,
     selectedRecipe,
     setSelectedRecipe,
     // UI State
@@ -61,12 +62,15 @@ function Crafting() {
     closeAllModals()
   }
 
-  const handleDeleteRecipe = (id: number) => {
+  const handleDeleteRecipe = async (id: number) => {
     if (confirm('Delete this recipe?')) {
-      // TODO: Add delete API
-      setRecipes((prev) => prev.filter((r) => r.id !== id))
-      if (selectedRecipe?.id === id) setSelectedRecipe(null)
-      toast.success('Recipe deleted')
+      try {
+        await deleteRecipe(id)
+        toast.success('Recipe deleted')
+      } catch (error) {
+        toast.error('Failed to delete recipe')
+        console.error(error)
+      }
     }
   }
 
