@@ -61,14 +61,15 @@ function Index() {
   const isLoading = isLoadingItems || isLoadingInventory || isLoadingRecipes
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Welcome back to Vault-M</h1>
-        <p className="text-muted-foreground">Manage your game server resources efficiently.</p>
+    <div className="w-full">
+      <div className="px-4 md:px-6 pt-4 md:pt-6">
+        <h1 className="mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight text-balance">
+          Vault-M
+        </h1>
       </div>
 
       {/* Stats Section */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="p-4 grid gap-2 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Money</CardTitle>
