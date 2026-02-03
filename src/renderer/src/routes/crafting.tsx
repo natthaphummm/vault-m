@@ -24,12 +24,9 @@ function Crafting() {
 
   // Store
   const {
-    setRecipes,
     recipes,
     fetchRecipes,
     deleteRecipe,
-    selectedRecipe,
-    setSelectedRecipe,
     // UI State
     isRecipeModalOpen,
     setIsRecipeModalOpen,
