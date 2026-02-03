@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Coins, Layers, Scroll } from 'lucide-react'
+import { Coins, Layers, Scroll, Package } from 'lucide-react'
 import { useMemo } from 'react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -49,7 +49,13 @@ function Index() {
       }
     })
 
-    return { totalItems, totalValue, recipeCount, topItems }
+    const moneyItem = inventory.find((inv) => {
+      const item = items.find((i) => i.id === inv.itemId)
+      return item?.name === 'money' || item?.name === 'Money'
+    })
+    const totalMoney = moneyItem ? moneyItem.amount : 0
+
+    return { totalItems, totalValue, recipeCount, topItems, totalMoney }
   }, [items, inventory, recipes])
 
   const isLoading = isLoadingItems || isLoadingInventory || isLoadingRecipes
@@ -65,8 +71,24 @@ function Index() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Portfolio Value</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Money</CardTitle>
             <Coins className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-7 w-20" />
+            ) : (
+              <div className="text-2xl font-bold text-green-500">
+                ${stats.totalMoney.toLocaleString()}
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">Cash on hand</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Portfolio Value</CardTitle>
+            <Layers className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -80,7 +102,7 @@ function Index() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Items in Stock</CardTitle>
-            <Layers className="h-4 w-4 text-muted-foreground" />
+            <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             {isLoading ? (
