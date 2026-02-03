@@ -53,6 +53,8 @@ export const ItemFormSchema = ItemSchema.extend({
     amount: z.number().min(0).optional() // helper for UI
 })
 
+export type ItemForm = z.infer<typeof ItemFormSchema>
+
 // Costs in the form might not have IDs yet (newly added rows)
 export const CraftingCostSchema = CraftingCostsSchema.omit({ id: true, craftingId: true }).extend({
     id: z.number().optional(),
