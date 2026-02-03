@@ -23,45 +23,45 @@ export const crafting = sqliteTable('crafting', {
   successChance: integer('success_chance').notNull().default(0),
 });
 
-export const recipeCosts = sqliteTable('recipe_costs', {
+export const craftingCosts = sqliteTable('crafting_costs', {
   id: integer('id').primaryKey(),
-  recipeId: integer('recipe_id').notNull().references(() => crafting.id, { onDelete: 'cascade' }),
+  craftingId: integer('crafting_id').notNull().references(() => crafting.id, { onDelete: 'cascade' }),
   itemId: integer('item_id').notNull().references(() => items.id),
   amount: integer('amount').notNull(),
   remove: integer('remove', { mode: 'boolean' }).notNull().default(true),
 });
 
-export const recipeResults = sqliteTable('recipe_results', {
+export const craftingResults = sqliteTable('crafting_results', {
   id: integer('id').primaryKey(),
-  recipeId: integer('recipe_id').notNull().references(() => crafting.id, { onDelete: 'cascade' }),
+  craftingId: integer('crafting_id').notNull().references(() => crafting.id, { onDelete: 'cascade' }),
   itemId: integer('item_id').notNull().references(() => items.id),
   amount: integer('amount').notNull(),
   type: text('type', { enum: ['success', 'fail'] }).notNull(),
 });
 
 export const craftingRelations = relations(crafting, ({ many }) => ({
-  costs: many(recipeCosts),
-  results: many(recipeResults),
+  costs: many(craftingCosts),
+  results: many(craftingResults),
 }));
 
-export const recipeCostsRelations = relations(recipeCosts, ({ one }) => ({
-  recipe: one(crafting, {
-    fields: [recipeCosts.recipeId],
+export const craftingCostsRelations = relations(craftingCosts, ({ one }) => ({
+  crafting: one(crafting, {
+    fields: [craftingCosts.craftingId],
     references: [crafting.id],
   }),
   item: one(items, {
-    fields: [recipeCosts.itemId],
+    fields: [craftingCosts.itemId],
     references: [items.id],
   }),
 }));
 
-export const recipeResultsRelations = relations(recipeResults, ({ one }) => ({
-  recipe: one(crafting, {
-    fields: [recipeResults.recipeId],
+export const craftingResultsRelations = relations(craftingResults, ({ one }) => ({
+  crafting: one(crafting, {
+    fields: [craftingResults.craftingId],
     references: [crafting.id],
   }),
   item: one(items, {
-    fields: [recipeResults.itemId],
+    fields: [craftingResults.itemId],
     references: [items.id],
   }),
 }));

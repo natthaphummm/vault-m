@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { toast } from 'sonner'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { XCircle, CheckCircle } from 'lucide-react'
@@ -26,6 +26,7 @@ function Crafting() {
   const {
     setRecipes,
     recipes,
+    fetchRecipes,
     selectedRecipe,
     setSelectedRecipe,
     // UI State
@@ -50,18 +51,10 @@ function Crafting() {
     queryFn: async () => await window.api.inventory.getAll()
   })
 
-  // Fetch recipes
-  const { data: fetchedRecipes } = useQuery({
-    queryKey: ['recipes'],
-    queryFn: async () => await window.api.crafting.getAll()
-  })
-
-  // Sync recipes to store when fetched
-  useMemo(() => {
-    if (fetchedRecipes) {
-      setRecipes(fetchedRecipes)
-    }
-  }, [fetchedRecipes, setRecipes])
+  // Fetch recipes on mount
+  useEffect(() => {
+    fetchRecipes()
+  }, [fetchRecipes])
 
   // Handlers
   const handleRecipeSaved = () => {

@@ -1,42 +1,62 @@
 import { create } from 'zustand'
-import { Recipe } from '@renderer/types'
-import { INITIAL_RECIPES } from '@renderer/data/recipes'
+import type { CraftingRecipe } from '@renderer/types'
+
 
 interface CraftingState {
     // Data
-    recipes: Recipe[]
-    setRecipes: (recipes: Recipe[] | ((prev: Recipe[]) => Recipe[])) => void
+    recipes: CraftingRecipe[]
+    setRecipes: (recipes: CraftingRecipe[] | ((prev: CraftingRecipe[]) => CraftingRecipe[])) => void
+    fetchRecipes: () => Promise<void>
+    saveRecipe: (recipe: CraftingRecipe) => Promise<void>
 
     // Selection & Filtering
-    selectedRecipe: Recipe | null
-    setSelectedRecipe: (recipe: Recipe | null) => void
+    selectedRecipe: CraftingRecipe | null
+    setSelectedRecipe: (recipe: CraftingRecipe | null) => void
     filterCategory: string
     setFilterCategory: (category: string) => void
 
     // UI & Modal State
     isRecipeModalOpen: boolean
     setIsRecipeModalOpen: (isOpen: boolean) => void
-    editingRecipe: Recipe | null
-    setEditingRecipe: (recipe: Recipe | null) => void // 0 id means new
+    editingRecipe: CraftingRecipe | null
+    setEditingRecipe: (recipe: CraftingRecipe | null) => void // 0 id means new
 
     isCraftModalOpen: boolean
     setIsCraftModalOpen: (isOpen: boolean) => void
-    activeCraft: Recipe | null
-    setActiveCraft: (recipe: Recipe | null) => void
+    activeCraft: CraftingRecipe | null
+    setActiveCraft: (recipe: CraftingRecipe | null) => void
 
     // Helper Actions
     openNewRecipeModal: () => void
-    openEditRecipeModal: (recipe: Recipe) => void
-    openCraftModal: (recipe: Recipe) => void
+    openEditRecipeModal: (recipe: CraftingRecipe) => void
+    openCraftModal: (recipe: CraftingRecipe) => void
     closeAllModals: () => void
 }
 
-export const useCraftingStore = create<CraftingState>((set) => ({
+export const useCraftingStore = create<CraftingState>((set, get) => ({
     // Data
-    recipes: INITIAL_RECIPES,
+    recipes: [],
     setRecipes: (recipes) => set((state) => ({
         recipes: typeof recipes === 'function' ? recipes(state.recipes) : recipes
     })),
+    fetchRecipes: async () => {
+        try {
+            const recipes = await window.api.crafting.getAll()
+            set({ recipes: recipes })
+        } catch (error) {
+            console.error('Failed to fetch recipes:', error)
+        }
+    },
+    saveRecipe: async (recipe) => {
+        try {
+            await window.api.crafting.save(recipe)
+            await get().fetchRecipes()
+            set({ isRecipeModalOpen: false, editingRecipe: null })
+        } catch (error) {
+            console.error('Failed to save recipe:', error)
+            throw error
+        }
+    },
 
     // Selection
     selectedRecipe: null,

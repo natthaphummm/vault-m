@@ -1,75 +1,74 @@
 import * as z from 'zod'
 
-export const ItemFormSchema = z.object({
+// --- Database Schemas ---
+
+export const ItemSchema = z.object({
+    id: z.number(),
     name: z.string().min(1, 'Name is required'),
     price: z.number().min(0, 'Price must be at least 0'),
-    amount: z.number().min(0),
     category: z.string().min(1, 'Category is required'),
-    image: z.string()
+    image: z.string().optional().nullable()
 })
 
-export type ItemForm = z.infer<typeof ItemFormSchema>
+export const InventorySchema = z.object({
+    itemId: z.number(),
+    amount: z.number()
+})
 
-export const CraftingCostSchema = z.object({
+export const CraftingSchema = z.object({
+    id: z.number(),
+    name: z.string().min(1, 'Name is required'),
+    category: z.string().min(1, 'Category is required'),
+    successChance: z.number().min(1).max(100)
+})
+
+export const CraftingCostsSchema = z.object({
+    id: z.number(),
+    craftingId: z.number(),
     itemId: z.number().min(1, 'Item is required'),
     amount: z.number().min(1, 'Amount must be at least 1'),
     remove: z.boolean()
 })
 
-export const CraftingResultSchema = z.object({
+export const CraftingResultsSchema = z.object({
+    id: z.number(),
+    craftingId: z.number(),
     itemId: z.number().min(1, 'Item is required'),
     amount: z.number().min(1, 'Amount must be at least 1'),
     type: z.enum(['success', 'fail'])
 })
 
-export const CraftingRecipeSchema = z.object({
-    id: z.number(),
-    name: z.string().min(1, 'Name is required'),
-    category: z.string().min(1, 'Category is required'),
-    successChance: z.number().min(1).max(100),
+// --- Types from DB Schemas ---
+export type Item = z.infer<typeof ItemSchema>
+export type InventoryItem = z.infer<typeof InventorySchema>
+export type Crafting = z.infer<typeof CraftingSchema>
+export type CraftingCost = z.infer<typeof CraftingCostsSchema>
+export type CraftingResult = z.infer<typeof CraftingResultsSchema>
+
+// --- Form & Composite Schemas (UI Layer) ---
+
+// Form Item Schema (mostly same as DB but id/image optional for new items)
+export const ItemFormSchema = ItemSchema.extend({
+    id: z.number().optional(),
+    amount: z.number().min(0).optional() // helper for UI
+})
+
+// Costs in the form might not have IDs yet (newly added rows)
+export const CraftingCostSchema = CraftingCostsSchema.omit({ id: true, craftingId: true }).extend({
+    id: z.number().optional(),
+    craftingId: z.number().optional()
+})
+
+// Results in the form might not have IDs yet
+export const CraftingResultSchema = CraftingResultsSchema.omit({ id: true, craftingId: true }).extend({
+    id: z.number().optional(),
+    craftingId: z.number().optional()
+})
+
+// The aggregate Recipe object used in the UI
+export const CraftingRecipeSchema = CraftingSchema.extend({
     costs: z.array(CraftingCostSchema),
     results: z.array(CraftingResultSchema)
 })
 
-export type CraftingRecipeFormState = z.infer<typeof CraftingRecipeSchema>
-
-// Deprecated aliases for backward compatibility
-export const RecipeSchema = CraftingRecipeSchema
-export type RecipeFormState = CraftingRecipeFormState
-
-export interface Item {
-    id: number;
-    name: string;
-    price: number;
-    category: string;
-    image?: string;
-    amount?: number;
-}
-
-export interface InventoryItem {
-    itemId: number;
-    amount: number;
-}
-
-export interface CraftingCost {
-    itemId: number;
-    amount: number;
-    remove: boolean;
-}
-
-export interface CraftingResult {
-    itemId: number;
-    amount: number;
-    type: 'success' | 'fail';
-}
-
-export interface CraftingRecipe {
-    id: number;
-    name: string;
-    category: string;
-    successChance: number;
-    costs: CraftingCost[];
-    results: CraftingResult[];
-}
-
-export type Recipe = CraftingRecipe;
+export type CraftingRecipe = z.infer<typeof CraftingRecipeSchema>

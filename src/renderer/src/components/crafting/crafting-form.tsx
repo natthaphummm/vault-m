@@ -1,6 +1,5 @@
 import { Trash2, Plus } from 'lucide-react'
 import { useForm } from '@tanstack/react-form'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Item, CraftingRecipe, CraftingRecipeSchema } from '../../types'
 import { Button } from '@/components/ui/button'
@@ -15,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { useCraftingStore } from '@/store/useCraftingStore'
 
 export const CraftingForm = ({
   initialData,
@@ -29,22 +29,7 @@ export const CraftingForm = ({
   onSave: () => void
   onCancel: () => void
 }) => {
-  const queryClient = useQueryClient()
-
-  const saveMutation = useMutation({
-    mutationFn: async (data: CraftingRecipe) => {
-      return await window.api.crafting.save(data)
-    },
-    onSuccess: () => {
-      toast.success(initialData.id ? 'Recipe updated' : 'Recipe created')
-      queryClient.invalidateQueries({ queryKey: ['recipes'] })
-      onSave()
-    },
-    onError: (err) => {
-      console.error(err)
-      toast.error('Failed to save recipe')
-    }
-  })
+  const { saveRecipe } = useCraftingStore()
 
   const form = useForm({
     defaultValues: initialData,
@@ -52,7 +37,14 @@ export const CraftingForm = ({
       onChange: CraftingRecipeSchema
     },
     onSubmit: async ({ value }) => {
-      saveMutation.mutate(value)
+      try {
+        await saveRecipe(value)
+        toast.success(initialData.id ? 'Recipe updated' : 'Recipe created')
+        onSave()
+      } catch (err) {
+        console.error(err)
+        toast.error('Failed to save recipe')
+      }
     }
   })
 
