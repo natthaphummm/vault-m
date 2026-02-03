@@ -55,6 +55,12 @@ export interface IApi {
   items: ItemsApi
   inventory: InventoryApi
   crafting: CraftingApi
+  app: AppApi
+}
+
+export interface AppApi {
+  getVersion: () => Promise<string>
+  checkUpdate: () => Promise<{ updateAvailable: boolean; message: string }>
 }
 
 declare global {

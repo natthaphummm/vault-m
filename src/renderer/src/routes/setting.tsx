@@ -1,7 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Moon, Sun, Laptop } from 'lucide-react'
+import { Moon, Sun, Laptop, RefreshCw } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 import { useTheme } from '@/components/theme-provider'
+import { Button } from '@/components/ui/button'
 import {
   Item,
   ItemActions,
@@ -24,6 +27,33 @@ export const Route = createFileRoute('/setting')({
 
 function Setting() {
   const { theme, setTheme } = useTheme()
+  const [version, setVersion] = useState<string>('')
+  const [isChecking, setIsChecking] = useState(false)
+
+  useEffect(() => {
+    const getVersion = async () => {
+      const v = await window.api.app.getVersion()
+      setVersion(v)
+    }
+    getVersion()
+  }, [])
+
+  const handleCheckUpdate = async () => {
+    setIsChecking(true)
+    try {
+      const result = await window.api.app.checkUpdate()
+      if (result.updateAvailable) {
+        toast.success(result.message)
+      } else {
+        toast.info(result.message)
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to check for updates')
+    } finally {
+      setIsChecking(false)
+    }
+  }
 
   return (
     <div className="w-full">
@@ -66,6 +96,21 @@ function Setting() {
                   </SelectItem>
                 </SelectContent>
               </Select>
+            </ItemActions>
+          </Item>
+        </ItemGroup>
+
+        <ItemGroup>
+          <Item>
+            <ItemContent>
+              <ItemTitle>Application Version</ItemTitle>
+              <ItemDescription>Current version: v{version}</ItemDescription>
+            </ItemContent>
+            <ItemActions>
+              <Button variant="outline" onClick={handleCheckUpdate} disabled={isChecking}>
+                <RefreshCw className={`mr-2 h-4 w-4 ${isChecking ? 'animate-spin' : ''}`} />
+                {isChecking ? 'Checking...' : 'Check for Update'}
+              </Button>
             </ItemActions>
           </Item>
         </ItemGroup>

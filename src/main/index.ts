@@ -1,6 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
-import { registerItemsHandlers, registerInventoryHandlers, registerCraftingHandlers } from './handlers'
+import { registerItemsHandlers, registerInventoryHandlers, registerCraftingHandlers, registerAppHandlers } from './handlers'
 
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -60,6 +60,7 @@ app.whenReady().then(() => {
   registerItemsHandlers()
   registerInventoryHandlers()
   registerCraftingHandlers()
+  registerAppHandlers()
 
   createWindow()
 

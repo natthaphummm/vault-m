@@ -14,6 +14,10 @@ export function createApi(ipc: Pick<Electron.IpcRenderer, 'invoke'>) {
             getAll: () => ipc.invoke('crafting:get-all'),
             save: (recipe: any) => ipc.invoke('crafting:save', recipe),
             delete: (id: number) => ipc.invoke('crafting:delete', id)
+        },
+        app: {
+            getVersion: () => ipc.invoke('app:get-version'),
+            checkUpdate: () => ipc.invoke('app:check-update')
         }
     }
 }
