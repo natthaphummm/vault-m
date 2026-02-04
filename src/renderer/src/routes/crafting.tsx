@@ -3,6 +3,7 @@ import { useEffect, useMemo } from 'react'
 import { toast } from 'sonner'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { XCircle, CheckCircle } from 'lucide-react'
+
 import {
   Dialog,
   DialogContent,
@@ -10,6 +11,8 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/dialog'
+import { Button } from '@renderer/components/ui/button'
+
 import { CraftingToolbar } from '../components/crafting/crafting-toolbar'
 import { CraftingSplitView } from '../components/crafting/crafting-split-view'
 import { CraftingForm } from '../components/crafting/crafting-form'
@@ -164,32 +167,24 @@ function Crafting() {
       <Dialog open={isCraftModalOpen} onOpenChange={setIsCraftModalOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Confirm Crafting</DialogTitle>
-            <DialogDescription>{activeCraft?.name}</DialogDescription>
+            <DialogTitle>Confirm Crafting {activeCraft?.name}</DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <div className="bg-muted/50 p-4 rounded-lg text-center mb-4">
-              <p className="text-sm text-muted-foreground">Simulation Mode: Choose outcome</p>
-            </div>
             <div className="grid grid-cols-2 gap-4">
-              <div
-                className="bg-red-500/10 hover:bg-red-500/20 p-4 rounded-xl border border-red-500/20 text-center cursor-pointer group flex flex-col items-center justify-center gap-2 transition-colors"
-                onClick={() => handleCraftAction('fail')}
-              >
-                <div className="w-10 h-10 bg-background rounded-full flex items-center justify-center shadow-sm text-red-500 mb-1">
-                  <XCircle size={20} />
-                </div>
-                <span className="text-sm font-bold text-red-600">Force Fail</span>
-              </div>
-              <div
-                className="bg-green-500/10 hover:bg-green-500/20 p-4 rounded-xl border border-green-500/20 text-center cursor-pointer group flex flex-col items-center justify-center gap-2 transition-colors"
+              <Button
+                className="bg-green-500/10 hover:bg-green-500/20 text-green-600 border border-green-500/20 text-center cursor-pointer group"
                 onClick={() => handleCraftAction('success')}
               >
-                <div className="w-10 h-10 bg-background rounded-full flex items-center justify-center shadow-sm text-green-500 mb-1">
-                  <CheckCircle size={20} />
-                </div>
-                <span className="text-sm font-bold text-green-600">Force Success</span>
-              </div>
+                <CheckCircle size={20} />
+                Force Success
+              </Button>
+              <Button
+                className="bg-red-500/10 hover:bg-red-500/20 text-red-600 border border-red-500/20 text-center cursor-pointer group"
+                onClick={() => handleCraftAction('fail')}
+              >
+                <XCircle size={20} />
+                Force Fail
+              </Button>
             </div>
           </div>
         </DialogContent>
