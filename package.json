@@ -1,7 +1,7 @@
 {
   "name": "vault-m",
-  "version": "0.0.1",
-  "description": "An Electron application with React and TypeScript",
+  "version": "1.0.0",
+  "description": "Item inventory simulation system and crafting system of FiveM RP.",
   "main": "./out/main/index.js",
   "author": "https://github.com/natthaphummm",
   "homepage": "https://github.com/natthaphummm/vault-m",
