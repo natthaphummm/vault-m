@@ -7,7 +7,7 @@ export const ItemSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     price: z.number().min(0, 'Price must be at least 0'),
     category: z.string().min(1, 'Category is required'),
-    image: z.string().optional().nullable()
+    image: z.string().nullable()
 })
 
 export const InventorySchema = z.object({
@@ -49,8 +49,8 @@ export type CraftingResult = z.infer<typeof CraftingResultsSchema>
 
 // Form Item Schema (mostly same as DB but id/image optional for new items)
 export const ItemFormSchema = ItemSchema.extend({
-    id: z.number().optional(),
-    amount: z.number().min(0).optional() // helper for UI
+    id: z.number(),
+    amount: z.number().min(0) // helper for UI
 })
 
 export type ItemForm = z.infer<typeof ItemFormSchema>

@@ -30,11 +30,12 @@ export default function InventoryFormItem({
 
   const form = useForm({
     defaultValues: {
+      id: editingItem?.id || 0,
       name: editingItem?.name || '',
       price: editingItem?.price || 0,
       amount: editingItem?.amount || 0,
       category: editingItem?.category || '',
-      image: editingItem?.image || ''
+      image: editingItem?.image ?? null
     },
     validators: {
       onSubmit: ItemFormSchema
@@ -49,11 +50,12 @@ export default function InventoryFormItem({
   useEffect(() => {
     if (isDialogOpen) {
       form.reset({
+        id: editingItem?.id || 0,
         name: editingItem?.name || '',
         price: editingItem?.price || 0,
         amount: editingItem?.amount || 0,
         category: editingItem?.category || '',
-        image: editingItem?.image || ''
+        image: editingItem?.image ?? null
       })
     }
   }, [editingItem, isDialogOpen])
@@ -183,7 +185,7 @@ export default function InventoryFormItem({
                     <Input
                       id={field.name}
                       name={field.name}
-                      value={field.state.value}
+                      value={field.state.value || ''}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}

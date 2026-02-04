@@ -2,7 +2,7 @@ import { Trash2, HelpCircle, Edit } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
-import type { Item } from '@renderer/types'
+import type { ItemForm } from '@renderer/types'
 
 export default function ItemCard({
   item,
@@ -13,12 +13,12 @@ export default function ItemCard({
   onEdit,
   onDelete
 }: {
-  item: Item
+  item: ItemForm
   showAmount: boolean
   showPrice: boolean
   showTotalValue: boolean
   onUpdateAmount: (itemId: number, newAmount: number) => void
-  onEdit: (item: Item) => void
+  onEdit: (item: ItemForm) => void
   onDelete: (itemId: number) => void
 }) {
   return (

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Item } from '@renderer/types'
+import type { ItemForm } from '@renderer/types'
 
 interface InventoryState {
     // Filter State
@@ -18,12 +18,12 @@ interface InventoryState {
     resetFilters: () => void
 
     // Edit/Dialog State
-    editingItem: Item | null
+    editingItem: ItemForm | null
     isDialogOpen: boolean
-    setEditingItem: (item: Item | null) => void
+    setEditingItem: (item: ItemForm | null) => void
     setIsDialogOpen: (isOpen: boolean) => void
     openNewItemDialog: () => void
-    openEditItemDialog: (item: Item) => void
+    openEditItemDialog: (item: ItemForm) => void
     closeDialog: () => void
 }
 

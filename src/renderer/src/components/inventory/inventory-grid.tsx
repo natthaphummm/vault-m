@@ -32,7 +32,7 @@ export default function InventoryGrid({
     return items
       .map((item) => {
         const inv = inventory.find((i) => i.itemId === item.id)
-        return { ...item, amount: inv ? inv.amount : 0 }
+        return { ...item, image: item.image, amount: inv ? inv.amount : 0 }
       })
       .filter((item) => {
         const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase())

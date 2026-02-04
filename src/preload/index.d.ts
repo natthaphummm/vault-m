@@ -5,7 +5,7 @@ export interface Item {
   name: string
   price: number
   category: string
-  image?: string | null
+  image: string | null
 }
 
 export interface InventoryItem {
