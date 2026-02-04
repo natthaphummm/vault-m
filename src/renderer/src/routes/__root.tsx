@@ -35,7 +35,6 @@ const RootLayout = () => (
       <SidebarTrigger />
       <Outlet />
     </main>
-    <TanStackRouterDevtools />
   </SidebarProvider>
 )
 
