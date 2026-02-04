@@ -64,7 +64,7 @@ function Index() {
     <div className="w-full">
       <div className="px-4 md:px-6 pt-4 md:pt-6">
         <h1 className="mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight text-balance">
-          Vault-M
+          Vault M
         </h1>
       </div>
 

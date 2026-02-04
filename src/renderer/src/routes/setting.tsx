@@ -63,9 +63,9 @@ function Setting() {
         </h1>
       </div>
 
-      <div className="p-4 space-y-6">
+      <div className="p-4 space-y-2">
         <ItemGroup>
-          <Item>
+          <Item variant="outline">
             <ItemContent>
               <ItemTitle>Theme</ItemTitle>
               <ItemDescription>Select the theme for the dashboard.</ItemDescription>
@@ -101,7 +101,7 @@ function Setting() {
         </ItemGroup>
 
         <ItemGroup>
-          <Item>
+          <Item variant="outline">
             <ItemContent>
               <ItemTitle>Application Version</ItemTitle>
               <ItemDescription>Current version: v{version}</ItemDescription>
