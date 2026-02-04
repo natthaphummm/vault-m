@@ -4,4 +4,9 @@ out
 .DS_Store
 .eslintcache
 *.log*
-resources/sqlite.db
+resources/**.db
+*.db
+.env
+.env.production
+*.env
+
