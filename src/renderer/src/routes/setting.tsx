@@ -30,28 +30,94 @@ function Setting() {
   const [version, setVersion] = useState<string>('')
   const [isChecking, setIsChecking] = useState(false)
 
+  // Update States
+  const [updateStatus, setUpdateStatus] = useState<
+    'idle' | 'available' | 'downloading' | 'downloaded' | 'error'
+  >('idle')
+  const [updateInfo, setUpdateInfo] = useState<{
+    version?: string
+    releaseDate?: string
+    notes?: string
+  } | null>(null)
+  const [downloadProgress, setDownloadProgress] = useState(0)
+  const [errorMessage, setErrorMessage] = useState('')
+
   useEffect(() => {
     const getVersion = async () => {
       const v = await window.api.app.getVersion()
       setVersion(v)
     }
     getVersion()
+
+    // Listeners
+    const removeDownloadListener = window.api.app.onDownloadProgress((progress) => {
+      setUpdateStatus('downloading')
+      setDownloadProgress(progress.percent)
+    })
+
+    const removeDownloadedListener = window.api.app.onUpdateDownloaded(() => {
+      setUpdateStatus('downloaded')
+      toast.success('Update downloaded successfully')
+    })
+
+    const removeErrorListener = window.api.app.onUpdateError((err) => {
+      setUpdateStatus('error')
+      setErrorMessage(err)
+      toast.error(`Update error: ${err}`)
+    })
+
+    return () => {
+      removeDownloadListener()
+      removeDownloadedListener()
+      removeErrorListener()
+    }
   }, [])
 
   const handleCheckUpdate = async () => {
     setIsChecking(true)
+    setErrorMessage('')
     try {
       const result = await window.api.app.checkUpdate()
       if (result.updateAvailable) {
-        toast.success(result.message)
+        setUpdateStatus('available')
+        setUpdateInfo({
+          version: result.version,
+          releaseDate: result.releaseDate,
+          notes: result.notes
+        })
+        toast.success(`New version ${result.version} available!`)
       } else {
-        toast.info(result.message)
+        setUpdateStatus('idle')
+        toast.info('You are on the latest version')
       }
     } catch (error) {
       console.error(error)
+      setUpdateStatus('error')
+      const msg = error instanceof Error ? error.message : 'Unknown error'
+      setErrorMessage(msg)
       toast.error('Failed to check for updates')
     } finally {
       setIsChecking(false)
+    }
+  }
+
+  const handleStartDownload = async () => {
+    try {
+      setUpdateStatus('downloading')
+      await window.api.app.startDownload()
+    } catch (error) {
+      console.error(error)
+      setUpdateStatus('error')
+      setErrorMessage('Failed to start download')
+    }
+  }
+
+  const handleInstallUpdate = async () => {
+    try {
+      await window.api.app.installUpdate()
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to install update')
     }
   }
 
@@ -104,13 +170,54 @@ function Setting() {
           <Item variant="outline">
             <ItemContent>
               <ItemTitle>Application Version</ItemTitle>
-              <ItemDescription>Current version: v{version}</ItemDescription>
+              <ItemDescription>
+                Current version: v{version}
+                {updateStatus === 'available' && updateInfo && (
+                  <div className="mt-2 p-2 bg-muted rounded-md text-sm">
+                    <p className="font-semibold">New version available: v{updateInfo.version}</p>
+                    <p className="text-muted-foreground text-xs mt-1">
+                      Released:{' '}
+                      {updateInfo.releaseDate
+                        ? new Date(updateInfo.releaseDate).toLocaleDateString()
+                        : 'N/A'}
+                    </p>
+                  </div>
+                )}
+                {updateStatus === 'downloading' && (
+                  <div className="mt-2">
+                    <div className="text-xs mb-1 flex justify-between">
+                      <span>Downloading...</span>
+                      <span>{Math.round(downloadProgress)}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all duration-300"
+                        style={{ width: `${downloadProgress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+                {updateStatus === 'downloaded' && (
+                  <p className="mt-2 text-green-500 font-medium">Update ready to install!</p>
+                )}
+                {updateStatus === 'error' && (
+                  <p className="mt-2 text-destructive font-medium">Error: {errorMessage}</p>
+                )}
+              </ItemDescription>
             </ItemContent>
             <ItemActions>
-              <Button variant="outline" onClick={handleCheckUpdate} disabled={isChecking}>
-                <RefreshCw className={`mr-2 h-4 w-4 ${isChecking ? 'animate-spin' : ''}`} />
-                {isChecking ? 'Checking...' : 'Check for Update'}
-              </Button>
+              {updateStatus === 'idle' || updateStatus === 'error' ? (
+                <Button variant="outline" onClick={handleCheckUpdate} disabled={isChecking}>
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isChecking ? 'animate-spin' : ''}`} />
+                  {isChecking ? 'Checking...' : 'Check for Update'}
+                </Button>
+              ) : updateStatus === 'available' ? (
+                <Button onClick={handleStartDownload}>Download Update</Button>
+              ) : updateStatus === 'downloading' ? (
+                <Button disabled>Downloading...</Button>
+              ) : updateStatus === 'downloaded' ? (
+                <Button onClick={handleInstallUpdate}>Restart & Install</Button>
+              ) : null}
             </ItemActions>
           </Item>
         </ItemGroup>

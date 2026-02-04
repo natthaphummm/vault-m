@@ -60,7 +60,12 @@ export interface IApi {
 
 export interface AppApi {
   getVersion: () => Promise<string>
-  checkUpdate: () => Promise<{ updateAvailable: boolean; message: string }>
+  checkUpdate: () => Promise<{ updateAvailable: boolean; version?: string; releaseDate?: string; notes?: string }>
+  startDownload: () => Promise<void>
+  installUpdate: () => Promise<void>
+  onUpdateDownloaded: (callback: () => void) => () => void
+  onDownloadProgress: (callback: (progress: any) => void) => () => void
+  onUpdateError: (callback: (error: string) => void) => () => void
 }
 
 declare global {

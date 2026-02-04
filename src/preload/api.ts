@@ -17,7 +17,9 @@ export function createApi(ipc: Pick<Electron.IpcRenderer, 'invoke'>) {
         },
         app: {
             getVersion: () => ipc.invoke('app:get-version'),
-            checkUpdate: () => ipc.invoke('app:check-update')
+            checkUpdate: () => ipc.invoke('app:check-update'),
+            startDownload: () => ipc.invoke('app:start-download'),
+            installUpdate: () => ipc.invoke('app:install-update')
         }
     }
 }
