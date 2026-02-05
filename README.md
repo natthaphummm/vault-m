@@ -58,6 +58,12 @@ npm run build:mac
 npm run build:linux
 ```
 
+## 🔑 Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file:
+
+- `NODE_ENV`: (Optional) Set to `production` for production builds. Defaults to `development`.
+
 ## 🗃️ Database
 
 This project uses Drizzle ORM with SQLite.
