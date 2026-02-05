@@ -6,6 +6,6 @@ export default defineConfig({
   out: './drizzle',
   dialect: 'sqlite',
   dbCredentials: {
-    url: process.env.NODE_ENV === 'production' ? './resources/prod.db' : './resources/dev.db',
+    url: (process.env.NODE_ENV === 'production' ? './resources/prod.db' : './resources/dev.db'),
   },
 });
