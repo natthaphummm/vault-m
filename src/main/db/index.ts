@@ -1,9 +1,25 @@
+import { app } from 'electron'
+import fs from 'fs'
+import { join } from 'path'
 import 'dotenv/config'
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
-import * as schema from './schema';
+import { drizzle } from 'drizzle-orm/better-sqlite3'
+import Database from 'better-sqlite3'
+import * as schema from './schema'
 
-const dbPath = process.env.NODE_ENV === 'production' ? './resources/prod.db' : './resources/dev.db';
+let dbPath: string
 
-const sqlite = new Database(dbPath);
-export const db = drizzle(sqlite, { schema });
+if (app.isPackaged) {
+    dbPath = join(app.getPath('userData'), 'database.db')
+    const sourcePath = join(process.resourcesPath, 'prod.db')
+
+    if (!fs.existsSync(dbPath)) {
+        if (fs.existsSync(sourcePath)) {
+            fs.copyFileSync(sourcePath, dbPath)
+        }
+    }
+} else {
+    dbPath = './resources/dev.db'
+}
+
+const sqlite = new Database(dbPath)
+export const db = drizzle(sqlite, { schema })

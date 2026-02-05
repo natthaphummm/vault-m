@@ -12,8 +12,8 @@ files:
 asarUnpack:
   - resources/**
 extraResources:
-  - from: resources/sqlite.db
-    to: sqlite.db
+  - from: resources/prod.db
+    to: prod.db
 win:
   executableName: vault-m
   icon: resources/icon.png
